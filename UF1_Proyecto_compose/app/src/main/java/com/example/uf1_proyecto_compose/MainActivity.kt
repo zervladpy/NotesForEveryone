@@ -3,13 +3,15 @@ package com.example.uf1_proyecto_compose
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.uf1_proyecto_compose.componets.DrawerBody
+import com.example.uf1_proyecto_compose.componets.DrawerHeader
+import com.example.uf1_proyecto_compose.navigation.AppNavigation
 import com.example.uf1_proyecto_compose.ui.theme.UF1_Proyecto_composeTheme
 
 class MainActivity : ComponentActivity() {
@@ -17,30 +19,31 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             UF1_Proyecto_composeTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Greeting("Android")
-                }
+                MainContent()
             }
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
+fun MainContent() {
+
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            DrawerHeader()
+            DrawerBody(items = listOf(), onItemClick = {}
+            )
+        }) {
+        AppNavigation()
+    }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
-fun GreetingPreview() {
-    UF1_Proyecto_composeTheme {
-        Greeting("Android")
-    }
+fun MyAppPreview() {
+    AppNavigation()
 }
