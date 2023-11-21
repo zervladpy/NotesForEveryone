@@ -16,20 +16,35 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview
 @Composable
-fun SearchBar(modifier: Modifier = Modifier) {
-
-    var searchText: String by remember { mutableStateOf("") }
+fun SearchBar(
+    modifier: Modifier = Modifier,
+    searchText: String,
+    onChange: (String) -> Unit,
+) {
 
     OutlinedTextField(
         modifier = modifier.fillMaxWidth(),
         value = searchText,
-        onValueChange = { searchText = it },
+        onValueChange = { onChange(it) },
         trailingIcon = {
-            Icon(imageVector = Icons.Rounded.Search, contentDescription = "Search")
+            Icon(
+                imageVector = Icons.Rounded.Search,
+                contentDescription = "Search",
+            )
         },
         label = { Text(text = "Search") }
     )
 
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SearchBarPreview() {
+    var searchText: String by remember { mutableStateOf("") }
+
+    SearchBar(
+        searchText = searchText,
+        onChange = { searchText = it }
+    )
 }
