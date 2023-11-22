@@ -12,77 +12,68 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.toObject
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
+import javax.inject.Inject
+import javax.inject.Singleton
 
 
-class TaskRepositoryImpl constructor(
-    private val api: CollectionReference,
+@Singleton
+class TaskRepositoryImpl
+@Inject
+constructor(
+    private val taskList: CollectionReference,
     private val taskDao: TaskDao,
 ) : TaskRepository {
-    override suspend fun getTasks(): Flow<Response<List<Task>>> = flow {
+    override suspend fun getTasks(
 
-        emit(Response.Loading())
+    ): Response<List<Task>> = try {
+        Response.Success(data = getTasksAndStoreLocal(taskList, taskDao))
 
-        try {
-            getTasksAndStoreLocal(api, taskDao)
-        } catch (e: FirebaseFirestoreException) {
-            emit(Response.Error(message = e.toString()))
+    } catch (e: FirebaseFirestoreException) {
+        Response.Error(message = e.toString())
 
-        } catch (e: Exception) {
-            emit(Response.Error(message = e.toString()))
-
-        }
-
-        // Emit success
-        emit(Response.Success(data = getTasksFromDao(tasksDao = taskDao)))
+    } catch (e: Exception) {
+        Response.Error(message = e.toString())
     }
 
-    override suspend fun createTask(task: Task): Flow<Response<Unit>> = flow {
-
-        emit(Response.Loading())
-
-        try {
-            insertToRepository(api, taskDao, task.toDto())
-        } catch (e: FirebaseFirestoreException) {
-            emit(Response.Error(message = e.toString()))
-        } catch (e: Exception) {
-            emit(Response.Error(message = e.toString()))
-        }
-
-        // emit Success
-        emit(Response.Success())
+    override suspend fun createTask(
+        task: Task
+    ): Response<Unit> = try {
+        insertToRepository(taskList, taskDao, task.toDto())
+        Response.Success()
+    } catch (e: FirebaseFirestoreException) {
+        Response.Error(message = e.toString())
+    } catch (e: Exception) {
+        Response.Error(message = e.toString())
     }
 
-    override suspend fun deleteTask(task: Task): Flow<Response<Unit>> = flow {
-
-        emit(Response.Loading())
-
-        try {
-            delete(api, taskDao, task.toDto())
-        } catch (e: FirebaseFirestoreException) {
-            emit(Response.Error(message = e.toString()))
-        } catch (e: Exception) {
-            emit(Response.Error(message = e.toString()))
-        }
-
-        emit(Response.Success())
+    override suspend fun deleteTask(
+        task: Task
+    ): Response<Unit> = try {
+        delete(taskList, taskDao, task.toDto())
+        Response.Success()
+    } catch (e: FirebaseFirestoreException) {
+        Response.Error(message = e.toString())
+    } catch (e: Exception) {
+        Response.Error(message = e.toString())
     }
 
     private suspend fun getTasksAndStoreLocal(
         api: CollectionReference,
         taskDao: TaskDao,
-    ) {
+    ): List<Task> {
         val documents: List<DocumentSnapshot> = api.get().result.documents
 
         if (documents.isNotEmpty()) {
             taskDao.insertAll(documents.map { it.toObject<TaskDto>()!!.toEntity() })
         }
 
+        return getTasksFromDao(tasksDao = taskDao)
     }
 
-    private suspend fun getTasksFromDao(tasksDao: TaskDao): List<Task> {
+    private suspend fun getTasksFromDao(
+        tasksDao: TaskDao,
+    ): List<Task> {
         return tasksDao.getAll().map { it.toTask() }
     }
 
