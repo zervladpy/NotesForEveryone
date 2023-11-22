@@ -13,10 +13,16 @@ interface TaskDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(tasks: List<TaskEntity>): Unit
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(task: TaskEntity)
+
     @Query("SELECT * FROM ${TaskEntity.TABLE_NAME}")
     suspend fun getAll(): List<TaskEntity>
 
-    @Delete
+    @Delete(entity = TaskEntity::class)
     suspend fun deleteAll(tasks: List<TaskEntity>): Unit
+
+    @Delete(entity = TaskEntity::class)
+    suspend fun delete(task: TaskEntity): Unit
 
 }

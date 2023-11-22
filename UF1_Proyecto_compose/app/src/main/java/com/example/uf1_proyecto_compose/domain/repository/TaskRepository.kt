@@ -8,8 +8,7 @@ interface TaskRepository {
 
     suspend fun getTasks(): Flow<Response<List<Task>>>
 
-    suspend fun saveTask(task: Task): Flow<Response<Unit>>
+    suspend fun createTask(task: Task): Flow<Response<Unit>>
 
     suspend fun deleteTask(task: Task): Flow<Response<Unit>>
-
 }

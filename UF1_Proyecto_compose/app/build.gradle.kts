@@ -1,7 +1,9 @@
 plugins {
     kotlin("kapt")
+    kotlin("plugin.serialization") version "1.9.20"
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -62,6 +64,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
     // Room
     implementation("androidx.room:room-runtime:2.6.0")
+    implementation("com.google.firebase:firebase-firestore:24.9.1")
     kapt("androidx.room:room-compiler:2.6.0")
     // View Model
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
@@ -75,6 +78,8 @@ dependencies {
     // Dagger Hilt (dependencies injection)
     implementation("com.google.dagger:hilt-android:2.44")
     kapt("com.google.dagger:hilt-android-compiler:2.44")
+    // Json Serialiation
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
 
     implementation("androidx.activity:activity-compose:1.8.1")
     implementation(platform("androidx.compose:compose-bom:2023.03.00"))
