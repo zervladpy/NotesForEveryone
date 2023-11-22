@@ -18,7 +18,9 @@ object AppModule {
     @Provides
     @Singleton
     fun provideTaskList(
-        firestore: FirebaseFirestore
+        firestore: FirebaseFirestore,
     ) = firestore.collection("tasks")
+
+
 }
 
