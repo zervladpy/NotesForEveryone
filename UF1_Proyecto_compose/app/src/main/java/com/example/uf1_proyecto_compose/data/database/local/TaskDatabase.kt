@@ -1,9 +1,9 @@
-package com.example.uf1_proyecto_compose.data.source.local.roomdb
+package com.example.uf1_proyecto_compose.data.database.local
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.example.uf1_proyecto_compose.data.source.local.roomdb.dao.TaskDao
-import com.example.uf1_proyecto_compose.data.source.local.roomdb.entity.TaskEntity
+import com.example.uf1_proyecto_compose.data.database.local.dao.TaskDao
+import com.example.uf1_proyecto_compose.data.database.local.entity.TaskEntity
 
 @Database(entities = [TaskEntity::class], version = 1, exportSchema = false)
 abstract class TaskDatabase : RoomDatabase() {
