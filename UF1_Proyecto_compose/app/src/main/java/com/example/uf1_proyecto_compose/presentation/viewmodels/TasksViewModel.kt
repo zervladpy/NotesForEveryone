@@ -10,6 +10,7 @@ import com.example.uf1_proyecto_compose.domain.GetTasksUseCase
 import com.example.uf1_proyecto_compose.domain.models.Task
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -31,6 +32,52 @@ class TasksViewModel
 
             _tasks = result
         }
+    }
+
+    fun addTask(title: String, description: String = "") {
+
+        // TODO (Implement remote and local database)
+
+        val newTask = Task(
+            uid = UUID.randomUUID().toString(),
+            title = title,
+            description = description,
+            done = false,
+        )
+
+        val newTasks = mutableListOf(newTask)
+
+        _tasks.forEach { newTasks.add(it) }
+
+        _tasks = newTasks.toList()
+
+    }
+
+    fun updateTask(
+        task: Task,
+        title: String? = null,
+        description: String? = null,
+        done: Boolean? = null
+    ) {
+
+        // TODO (Implement remote and local database)
+
+        val updatedTask = Task(
+            uid = task.uid,
+            title = title ?: task.title,
+            description = description ?: task.description,
+            done = done ?: task.done
+        )
+
+        _tasks = tasks.map { if (it == task) updatedTask else it }
+
+    }
+
+    fun deleteTask(task: Task) {
+
+        // TODO (Implement remote and local database)
+
+        _tasks = tasks.filter { it.uid != task.uid }
 
     }
 

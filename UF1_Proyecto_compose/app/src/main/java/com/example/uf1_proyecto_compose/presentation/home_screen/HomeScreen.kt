@@ -14,6 +14,7 @@ import androidx.navigation.NavController
 import com.example.uf1_proyecto_compose.presentation.common.appbars.CenteredAppbar
 import com.example.uf1_proyecto_compose.presentation.common.buttons.FabButton
 import com.example.uf1_proyecto_compose.presentation.common.cards.TaskPreviewCard
+import com.example.uf1_proyecto_compose.presentation.navigation.MainNavRoutes
 import com.example.uf1_proyecto_compose.presentation.viewmodels.TasksViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -36,7 +37,12 @@ fun HomeScreen(
             ) {
                 LazyColumn {
                     items(tasksViewModel.tasks) { task ->
-                        TaskPreviewCard(task = task)
+                        TaskPreviewCard(
+                            task = task,
+                            onClick = {
+                                navController.navigate(MainNavRoutes.TaskScreen.route + "/" + task.uid)
+                            }
+                        )
                     }
                 }
             }
@@ -46,7 +52,7 @@ fun HomeScreen(
                 icon = Icons.Rounded.Add,
                 title = "Create Task",
                 onClick = {
-                    // TODO("Add Create Task Screen")
+                    navController.navigate(MainNavRoutes.TaskScreen.route)
                 }
             )
         }

@@ -1,9 +1,11 @@
 package com.example.uf1_proyecto_compose.presentation.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.uf1_proyecto_compose.presentation.home_screen.HomeScreen
 import com.example.uf1_proyecto_compose.presentation.task_screen.TaskScreen
 import com.example.uf1_proyecto_compose.presentation.viewmodels.TasksViewModel
@@ -25,11 +27,24 @@ fun MainNavigation(
         }
 
         composable(MainNavRoutes.TaskScreen.route) {
-            TaskScreen()
+            TaskScreen(
+                tasksViewModel = tasksViewModel,
+                navController = navController,
+            )
         }
 
+        composable(
+            route = "${MainNavRoutes.TaskScreen.route}/{taskUid}",
+            arguments = listOf(navArgument("taskUid") { type = NavType.StringType })
+        ) {
+
+            TaskScreen(
+                tasksViewModel = tasksViewModel,
+                navController = navController,
+                taskUid = it.arguments?.getString("taskUid")
+            )
+        }
 
     }
-
 
 }
