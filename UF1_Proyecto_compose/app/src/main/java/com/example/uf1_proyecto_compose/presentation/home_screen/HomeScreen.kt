@@ -1,48 +1,51 @@
 package com.example.uf1_proyecto_compose.presentation.home_screen
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.example.uf1_proyecto_compose.presentation.viewmodels.TasksViewModel
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.uf1_proyecto_compose.presentation.common.appbars.CenteredAppbar
+import com.example.uf1_proyecto_compose.presentation.common.buttons.FabButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    tasksViewModel: TasksViewModel
 ) {
-
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(text = "Tasks")
+            CenteredAppbar(
+                title = "Home"
+            )
+        },
+        content = {
+            Column(
+                modifier = Modifier.padding(it)
+            ) {
+                // TODO("Show Task List")
+            }
+        },
+        floatingActionButton = {
+            FabButton(
+                icon = Icons.Rounded.Add,
+                title = "Create Task",
+                onClick = {
+                    // TODO("Add Create Task Screen")
                 }
             )
         }
-    ) { it ->
-        Box(
-            modifier = modifier
-                .padding(it)
-                .fillMaxSize()
-        ) {
+    )
+}
 
-            LazyColumn {
-                items(tasksViewModel.tasks) {
-                    Text(text = it.title)
-                    Text(text = it.description)
-
-                }
-            }
-
-        }
-    }
+@Preview
+@Preview(uiMode = UI_MODE_NIGHT_YES, name = "Dark")
+@Composable
+fun HomeScreenPreview() {
+    HomeScreen()
 }

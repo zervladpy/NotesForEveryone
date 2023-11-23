@@ -10,8 +10,13 @@ import javax.inject.Inject
 class TaskService
 @Inject constructor(
     private val firestore: FirebaseFirestore,
-) {
-    suspend fun getTasks(): List<TaskModel> {
+) : TaskApiClient {
+
+    companion object {
+        private const val TABLE_NAME = "tasks"
+    }
+
+    override suspend fun getTasks(): List<TaskModel> {
 
         return withContext(Dispatchers.IO) {
             val result = firestore.collection(TABLE_NAME).get().await().documents
@@ -25,8 +30,16 @@ class TaskService
 
     }
 
-    companion object {
-        private const val TABLE_NAME = "tasks"
+    override suspend fun insertTask(task: TaskModel) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun deleteTask(task: TaskModel) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun updateTask(task: TaskModel) {
+        TODO("Not yet implemented")
     }
 
 }

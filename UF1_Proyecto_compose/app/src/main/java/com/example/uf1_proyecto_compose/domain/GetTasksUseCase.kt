@@ -1,7 +1,7 @@
 package com.example.uf1_proyecto_compose.domain
 
 import com.example.uf1_proyecto_compose.data.database.TaskRepository
-import com.example.uf1_proyecto_compose.data.database.local.entity.toDatabase
+import com.example.uf1_proyecto_compose.data.database.local.toDatabase
 import com.example.uf1_proyecto_compose.domain.models.Task
 import javax.inject.Inject
 

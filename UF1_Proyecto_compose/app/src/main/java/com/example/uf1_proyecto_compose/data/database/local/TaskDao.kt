@@ -1,11 +1,11 @@
-package com.example.uf1_proyecto_compose.data.database.local.dao
+package com.example.uf1_proyecto_compose.data.database.local
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.uf1_proyecto_compose.data.database.local.entity.TaskEntity
+import com.example.uf1_proyecto_compose.data.database.local.TaskEntity
 
 @Dao
 interface TaskDao {

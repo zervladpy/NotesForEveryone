@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.tooling.preview.Preview
 import com.example.uf1_proyecto_compose.presentation.home_screen.HomeScreen
 import com.example.uf1_proyecto_compose.presentation.ui.theme.UF1_Proyecto_composeTheme
 import com.example.uf1_proyecto_compose.presentation.viewmodels.TasksViewModel
@@ -22,8 +24,14 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             UF1_Proyecto_composeTheme {
-                HomeScreen(tasksViewModel = tasksViewModel)
+                HomeScreen()
             }
         }
     }
+}
+
+@Preview
+@Composable
+fun HomeScreenPreview() {
+    HomeScreen()
 }
