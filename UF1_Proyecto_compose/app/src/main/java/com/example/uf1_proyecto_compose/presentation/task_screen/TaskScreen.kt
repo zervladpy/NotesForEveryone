@@ -5,19 +5,22 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.uf1_proyecto_compose.presentation.common.appbars.BottomTaskAppbar
 import com.example.uf1_proyecto_compose.presentation.common.appbars.CenteredAppbar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TaskScreen() {
+fun TaskScreen(
+    taskViewModel: TaskViewModel,
+) {
 
     Scaffold(
         topBar = {
@@ -35,14 +38,23 @@ fun TaskScreen() {
             ) {
 
                 EditableTitle(
-                    title = "Task 1",
+                    title = "Task Title",
                     onEdit = {}
                 )
 
                 EditableBody(
-                    text = "Super Good Description"
+                    text = "Super Good Description",
+                    onEdit = {}
                 )
             }
+        },
+        bottomBar = {
+            BottomTaskAppbar(
+                fabIcon = Icons.Rounded.Edit,
+                onFabClick = {
+                    /// TODO (Toggle edit mode)
+                }
+            )
         }
     )
 }
@@ -88,10 +100,4 @@ fun EditableBody(
             )
         }
     }
-}
-
-@Preview
-@Composable
-fun TaskScreenPreview() {
-    TaskScreen()
 }

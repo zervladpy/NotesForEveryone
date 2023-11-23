@@ -1,5 +1,6 @@
 package com.example.uf1_proyecto_compose.data.database.repository
 
+import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.Dispatchers
@@ -18,15 +19,25 @@ class TaskService
 
     override suspend fun getTasks(): List<TaskModel> {
 
-        return withContext(Dispatchers.IO) {
+        val result: List<TaskModel> = withContext(Dispatchers.IO) {
             val result = firestore.collection(TABLE_NAME).get().await().documents
 
+            Log.d("Get Task", result.toString())
+
             if (result.isNotEmpty()) {
-                result.mapNotNull { it.toObject() }
+
+                result.mapNotNull {
+                    Log.d("Get Task Mapper", it.toObject<TaskModel>().toString())
+                    it.toObject()
+                }
             } else {
                 emptyList()
             }
         }
+
+        Log.d(TaskService::class.toString(), result.toString())
+
+        return result
 
     }
 

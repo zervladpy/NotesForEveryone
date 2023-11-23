@@ -1,7 +1,8 @@
 package com.example.uf1_proyecto_compose.data.database
 
-import com.example.uf1_proyecto_compose.data.database.local.TaskEntity
+import android.util.Log
 import com.example.uf1_proyecto_compose.data.database.local.TaskDao
+import com.example.uf1_proyecto_compose.data.database.local.TaskEntity
 import com.example.uf1_proyecto_compose.data.database.repository.TaskService
 import com.example.uf1_proyecto_compose.domain.models.Task
 import com.example.uf1_proyecto_compose.domain.models.toDomain
@@ -13,7 +14,10 @@ class TaskRepository
     private val taskDao: TaskDao,
 ) {
     suspend fun getAllTasksFromApi(): List<Task> {
-        return api.getTasks().map { it.toDomain() }
+        return api.getTasks().map {
+            Log.d("Task Mapper", it.toDomain().toString())
+            it.toDomain()
+        }
     }
 
     suspend fun getAllTasksFromDatabase(): List<Task> {
