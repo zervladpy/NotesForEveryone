@@ -1,7 +1,7 @@
 package com.example.uf1_proyecto_compose.domain.models
 
 import com.example.uf1_proyecto_compose.data.database.local.TaskEntity
-import com.example.uf1_proyecto_compose.data.database.repository.TaskModel
+import com.example.uf1_proyecto_compose.data.database.repository.task.TaskModel
 
 data class Task(
     val uid: String,

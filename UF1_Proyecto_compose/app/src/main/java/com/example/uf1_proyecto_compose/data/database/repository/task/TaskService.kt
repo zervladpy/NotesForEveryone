@@ -1,4 +1,4 @@
-package com.example.uf1_proyecto_compose.data.database.repository
+package com.example.uf1_proyecto_compose.data.database.repository.task
 
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
@@ -16,6 +16,7 @@ class TaskService
     companion object {
         private const val TABLE_NAME = "tasks"
     }
+
 
     override suspend fun getTasks(): List<TaskModel> {
 
@@ -42,15 +43,21 @@ class TaskService
     }
 
     override suspend fun insertTask(task: TaskModel) {
-        TODO("Not yet implemented")
+        withContext(Dispatchers.IO) {
+            firestore.collection(TABLE_NAME).document(task.uid).set(task).await()
+        }
     }
 
     override suspend fun deleteTask(task: TaskModel) {
-        TODO("Not yet implemented")
+        withContext(Dispatchers.IO) {
+            firestore.collection(TABLE_NAME).document(task.uid).delete().await()
+        }
     }
 
     override suspend fun updateTask(task: TaskModel) {
-        TODO("Not yet implemented")
+        withContext(Dispatchers.IO) {
+            firestore.collection(TABLE_NAME).document(task.uid).set(task).await()
+        }
     }
 
 }

@@ -1,6 +1,6 @@
 package com.example.uf1_proyecto_compose.di
 
-import com.example.uf1_proyecto_compose.data.database.repository.TaskService
+import com.example.uf1_proyecto_compose.data.database.repository.task.TaskService
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides

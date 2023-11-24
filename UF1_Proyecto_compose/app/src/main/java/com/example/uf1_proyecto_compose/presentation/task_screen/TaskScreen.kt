@@ -9,7 +9,6 @@ import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Create
 import androidx.compose.material.icons.rounded.Delete
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -34,7 +33,7 @@ import com.example.uf1_proyecto_compose.presentation.viewmodels.TasksViewModel
 fun TaskScreen(
     tasksViewModel: TasksViewModel,
     navController: NavController,
-    taskUid: String? = null
+    taskUid: String? = null,
 ) {
 
 
@@ -67,10 +66,6 @@ fun TaskScreen(
                     title = title,
                     onEdit = { it -> title = it },
                     isEditable = isEditable
-                )
-
-                Divider(
-                    modifier = Modifier.padding(top = 10.dp, bottom = 10.dp)
                 )
 
                 EditableBody(
@@ -154,6 +149,15 @@ fun EditableBody(
         onEdit = onEdit,
         isEditable = isEditable
     )
+}
+
+@Composable
+fun EndDateSelector() {
+
+    /****
+     * TODO (Add limit date selector)
+     ****/
+
 }
 
 /**

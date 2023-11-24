@@ -1,4 +1,4 @@
-package com.example.uf1_proyecto_compose.data.database.repository
+package com.example.uf1_proyecto_compose.data.database.repository.task
 
 interface TaskApiClient {
 

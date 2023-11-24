@@ -25,7 +25,8 @@ fun InputTextFieldWithLabel(
     isError: Boolean = false,
     errorText: String = "",
     onEdit: (String) -> Unit = {},
-    isEditable: Boolean = true
+    isEditable: Boolean = true,
+    maxLines: Int = 1,
 ) {
     OutlinedTextField(
         modifier = modifier,
@@ -33,6 +34,7 @@ fun InputTextFieldWithLabel(
         label = { Text(text = label) },
         isError = isError,
         onValueChange = onEdit,
+        maxLines = maxLines,
         supportingText = {
             if (isError) {
                 Text(
@@ -56,7 +58,7 @@ fun InputTextFieldWithPlaceHolder(
     isError: Boolean = false,
     errorText: String = "",
     onEdit: (String) -> Unit = {},
-    isEditable: Boolean = true
+    isEditable: Boolean = true,
 ) {
     OutlinedTextField(
         modifier = modifier,

@@ -14,7 +14,7 @@ import androidx.navigation.NavController
 import com.example.uf1_proyecto_compose.presentation.common.appbars.CenteredAppbar
 import com.example.uf1_proyecto_compose.presentation.common.buttons.FabButton
 import com.example.uf1_proyecto_compose.presentation.common.cards.TaskPreviewCard
-import com.example.uf1_proyecto_compose.presentation.navigation.MainNavRoutes
+import com.example.uf1_proyecto_compose.presentation.navigation.NavigationRoute
 import com.example.uf1_proyecto_compose.presentation.viewmodels.TasksViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -23,12 +23,14 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     tasksViewModel: TasksViewModel,
     navController: NavController,
+    openDrawer: () -> Unit = {},
 ) {
 
     Scaffold(
         topBar = {
             CenteredAppbar(
-                title = "Home"
+                title = "Home",
+                onNavigationIconClick = openDrawer
             )
         },
         content = {
@@ -40,7 +42,7 @@ fun HomeScreen(
                         TaskPreviewCard(
                             task = task,
                             onClick = {
-                                navController.navigate(MainNavRoutes.TaskScreen.route + "/" + task.uid)
+                                navController.navigate(NavigationRoute.TASK_SCREEN + "/" + task.uid)
                             }
                         )
                     }
@@ -52,7 +54,7 @@ fun HomeScreen(
                 icon = Icons.Rounded.Add,
                 title = "Create Task",
                 onClick = {
-                    navController.navigate(MainNavRoutes.TaskScreen.route)
+                    navController.navigate(NavigationRoute.TASK_SCREEN)
                 }
             )
         }

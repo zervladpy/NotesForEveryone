@@ -6,8 +6,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.uf1_proyecto_compose.domain.GetTasksUseCase
 import com.example.uf1_proyecto_compose.domain.models.Task
+import com.example.uf1_proyecto_compose.domain.usecases.DeleteTaskUseCase
+import com.example.uf1_proyecto_compose.domain.usecases.GetTasksUseCase
+import com.example.uf1_proyecto_compose.domain.usecases.InsertTaskUseCase
+import com.example.uf1_proyecto_compose.domain.usecases.UpdateTaskUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.util.UUID
@@ -17,6 +20,9 @@ import javax.inject.Inject
 class TasksViewModel
 @Inject constructor(
     private val getTasksUseCase: GetTasksUseCase,
+    private val deleteTaskUseCase: DeleteTaskUseCase,
+    private val insertTaskUseCase: InsertTaskUseCase,
+    private val updateTaskUseCase: UpdateTaskUseCase,
 ) : ViewModel() {
 
     private var _tasks by mutableStateOf(emptyList<Task>())
@@ -36,8 +42,6 @@ class TasksViewModel
 
     fun addTask(title: String, description: String = "") {
 
-        // TODO (Implement remote and local database)
-
         val newTask = Task(
             uid = UUID.randomUUID().toString(),
             title = title,
@@ -45,11 +49,16 @@ class TasksViewModel
             done = false,
         )
 
-        val newTasks = mutableListOf(newTask)
+        viewModelScope.launch {
+            insertTaskUseCase.insert(newTask)
 
-        _tasks.forEach { newTasks.add(it) }
+            val newTasks = mutableListOf(newTask)
 
-        _tasks = newTasks.toList()
+            _tasks.forEach { newTasks.add(it) }
+
+            _tasks = newTasks.toList()
+        }
+
 
     }
 
@@ -57,10 +66,8 @@ class TasksViewModel
         task: Task,
         title: String? = null,
         description: String? = null,
-        done: Boolean? = null
+        done: Boolean? = null,
     ) {
-
-        // TODO (Implement remote and local database)
 
         val updatedTask = Task(
             uid = task.uid,
@@ -69,15 +76,21 @@ class TasksViewModel
             done = done ?: task.done
         )
 
-        _tasks = tasks.map { if (it == task) updatedTask else it }
+        viewModelScope.launch {
+
+            updateTaskUseCase.update(updatedTask)
+
+            _tasks = getTasksUseCase.getFromUniqueSource()
+        }
 
     }
 
     fun deleteTask(task: Task) {
 
-        // TODO (Implement remote and local database)
-
-        _tasks = tasks.filter { it.uid != task.uid }
+        viewModelScope.launch {
+            deleteTaskUseCase.delete(task)
+            _tasks = getTasksUseCase.getFromUniqueSource()
+        }
 
     }
 

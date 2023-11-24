@@ -1,4 +1,4 @@
-package com.example.uf1_proyecto_compose.domain
+package com.example.uf1_proyecto_compose.domain.usecases
 
 import android.util.Log
 import com.example.uf1_proyecto_compose.data.database.TaskRepository
@@ -11,17 +11,21 @@ class GetTasksUseCase @Inject constructor(
 
     ) {
     suspend operator fun invoke(): List<Task> {
-        val tasks = repository.getAllTasksFromApi()
+        val tasks = repository.apiGetAllTasks()
 
         Log.d(GetTasksUseCase::class.toString(), tasks.toString())
 
-        return if (tasks.isNotEmpty()) {
-            repository.clear()
-            repository.insertTasks(tasks.map { it.toDatabase() })
-            tasks
-        } else {
-            repository.getAllTasksFromDatabase()
+        if (tasks.isNotEmpty()) {
+            repository.dbClear()
+            repository.dbInsertTasks(tasks.map { it.toDatabase() })
         }
+
+        /** If Sabela asks, unique source of truth :) */
+        return getFromUniqueSource()
+    }
+
+    suspend fun getFromUniqueSource(): List<Task> {
+        return repository.dbGetTasks()
     }
 }
 
