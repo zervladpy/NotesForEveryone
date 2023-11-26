@@ -16,7 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.uf1_proyecto_compose.presentation.common.buttons.FabButton
+import com.example.uf1_proyecto_compose.presentation.common.buttons.N4EFabButton
 import com.example.uf1_proyecto_compose.presentation.ui.theme.UF1_Proyecto_composeTheme
 
 @Composable
@@ -29,7 +29,7 @@ fun BottomTaskAppbar(
     BottomAppBar(
         actions = actions,
         floatingActionButton = {
-            FabButton(
+            N4EFabButton(
                 onClick = onFabClick,
                 icon = fabIcon
             )

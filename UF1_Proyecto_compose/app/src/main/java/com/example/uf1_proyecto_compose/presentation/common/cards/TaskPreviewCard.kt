@@ -10,27 +10,29 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.uf1_proyecto_compose.domain.models.Task
+import com.example.uf1_proyecto_compose.domain.model.Task
 import com.example.uf1_proyecto_compose.presentation.ui.theme.UF1_Proyecto_composeTheme
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskPreviewCard(
     task: Task,
     onClick: (Task) -> Unit = {},
-    onTaskComplete: (Boolean) -> Unit = {},
+    progress: Float = 0.0f
 ) {
     Card(
         modifier = Modifier
@@ -45,9 +47,7 @@ fun TaskPreviewCard(
         ) {
             Column(
                 modifier = Modifier
-                    .weight(
-                        0.7f
-                    )
+                    .weight(0.7f)
                     .fillMaxHeight(),
             ) {
                 Text(
@@ -64,15 +64,29 @@ fun TaskPreviewCard(
                     text = task.description,
                     style = MaterialTheme.typography.bodyMedium
                 )
+                Spacer(modifier = Modifier.weight(1f))
+                Text(
+                    text = "created at ${task.creationDate.format(DateTimeFormatter.ofPattern("dd/mm/yyyy"))}",
+                    style = MaterialTheme.typography.bodySmall.copy(
+                        color = MaterialTheme.colorScheme
+                            .onBackground.copy(alpha = 0.5f)
+                    )
+                )
             }
             Column(
                 modifier = Modifier.fillMaxHeight(),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Checkbox(
-                    checked = task.done,
-                    onCheckedChange = onTaskComplete
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .height(60.dp)
+                        .width(60.dp),
+                    strokeWidth = 5.dp,
+                    strokeCap = StrokeCap.Round,
+                    color = MaterialTheme.colorScheme.onBackground,
+                    trackColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.1f),
+                    progress = { progress }
                 )
             }
         }
@@ -96,6 +110,8 @@ fun TaskPreviewCardPreview(
                         title = "Task Title",
                         description = "Some Shot Description of the task",
                         done = false,
+                        creationDate = LocalDateTime.now(),
+                        synchronized = false
                     )
                 )
             }
