@@ -2,8 +2,8 @@ package com.example.uf1_proyecto_compose.domain.use_case.task
 
 import android.util.Log
 import com.example.uf1_proyecto_compose.domain.model.Task
+import com.example.uf1_proyecto_compose.domain.repository.AppRepository
 import com.example.uf1_proyecto_compose.domain.repository.AuthRepository
-import com.example.uf1_proyecto_compose.domain.repository.TaskRepository
 import com.example.uf1_proyecto_compose.utils.Response
 import com.google.firebase.firestore.FirebaseFirestoreException
 import kotlinx.coroutines.flow.Flow
@@ -15,7 +15,7 @@ import javax.inject.Inject
 class GetTask
 @Inject constructor(
     private val authRepository: AuthRepository,
-    private val taskRepository: TaskRepository,
+    private val appRepository: AppRepository,
 ) {
 
     operator fun invoke(
@@ -25,11 +25,11 @@ class GetTask
         try {
             emit(Response.Loading())
 
-            val result = taskRepository.databaseGetByUid(userUid, taskUid)
+            val result = appRepository.databaseGetTask(taskUid)
 
             Log.d("Get Task Use Case", result.toString())
 
-            emit(Response.Success(result))
+            // emit(Response.Success(result))
         } catch (e: NullPointerException) {
             emit(Response.Error(message = "User is null"))
             Log.d("Get Task Use Case", e.toString())

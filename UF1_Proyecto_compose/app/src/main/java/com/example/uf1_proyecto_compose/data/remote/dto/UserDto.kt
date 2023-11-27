@@ -1,5 +1,6 @@
 package com.example.uf1_proyecto_compose.data.remote.dto
 
+import com.example.uf1_proyecto_compose.data.local.entity.UserEntity
 import com.example.uf1_proyecto_compose.domain.model.User
 
 data class UserDto(
@@ -9,6 +10,16 @@ data class UserDto(
 )
 
 fun UserDto.toDomain(): User {
-    return User(uid)
+    return User(
+        uid = uid,
+        displayName = displayName
+    )
+}
+
+fun UserDto.toEntity(): UserEntity {
+    return UserEntity(
+        uid = uid,
+        displayName = displayName
+    )
 }
 

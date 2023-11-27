@@ -1,10 +1,10 @@
 package com.example.uf1_proyecto_compose.utils.di
 
-import com.example.uf1_proyecto_compose.data.local.dao.TaskDao
+import com.example.uf1_proyecto_compose.data.local.dao.AppDao
 import com.example.uf1_proyecto_compose.data.remote.task.TaskApi
 import com.example.uf1_proyecto_compose.data.remote.task.TaskFirebaseApi
-import com.example.uf1_proyecto_compose.data.repository.TaskRepositoryImpl
-import com.example.uf1_proyecto_compose.domain.repository.TaskRepository
+import com.example.uf1_proyecto_compose.data.repository.AppRepositoryImpl
+import com.example.uf1_proyecto_compose.domain.repository.AppRepository
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
@@ -35,8 +35,8 @@ object NetworkModule {
     @Provides
     fun provideTaskRepository(
         taskRepository: TaskApi,
-        taskDao: TaskDao,
-    ): TaskRepository = TaskRepositoryImpl(taskRepository, taskDao)
-    
+        appDao: AppDao,
+    ): AppRepository = AppRepositoryImpl(taskRepository, appDao)
+
 
 }

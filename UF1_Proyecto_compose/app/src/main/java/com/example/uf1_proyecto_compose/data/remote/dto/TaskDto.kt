@@ -1,6 +1,5 @@
 package com.example.uf1_proyecto_compose.data.remote.dto
 
-import com.example.uf1_proyecto_compose.data.local.entity.TaskEntity
 import com.example.uf1_proyecto_compose.domain.model.Task
 import com.example.uf1_proyecto_compose.utils.formatter.FormatterConstraint
 import com.google.gson.annotations.SerializedName
@@ -13,6 +12,8 @@ data class TaskDto(
     @SerializedName("done") val done: Boolean = false,
     @SerializedName("creation_date") val creationDate: String = "",
     @SerializedName("synchronized") val synchronized: Boolean = false,
+    @SerializedName("progression") val progression: Int = if (done) 100 else 0,
+    @SerializedName("subtasks") val subtasks: List<SubTaskDto> = emptyList(),
 )
 
 fun TaskDto.toDomain(): Task {
@@ -25,17 +26,8 @@ fun TaskDto.toDomain(): Task {
             creationDate,
             FormatterConstraint.dateFormat
         ),
-        synchronized = synchronized
-    )
-}
-
-fun TaskDto.toEntity(): TaskEntity {
-    return TaskEntity(
-        uid,
-        title,
-        description,
-        done,
-        creationDate,
-        synchronized
+        synchronized = synchronized,
+        progression = progression.toFloat(),
+        subtasks = subtasks.map { it.toDomain() }
     )
 }

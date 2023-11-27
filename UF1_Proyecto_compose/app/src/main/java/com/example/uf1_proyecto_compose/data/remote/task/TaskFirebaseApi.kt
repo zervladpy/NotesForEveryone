@@ -1,7 +1,7 @@
 package com.example.uf1_proyecto_compose.data.remote.task
 
 import com.example.uf1_proyecto_compose.data.remote.dto.TaskDto
-import com.example.uf1_proyecto_compose.utils.constraint.TableConstraints
+import com.example.uf1_proyecto_compose.utils.constraint.TableConstraint
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.toObject
@@ -15,7 +15,7 @@ import javax.inject.Inject
  *
  * @see FirebaseFirestore
  * @see TaskApi
- * @see TableConstraints
+ * @see TableConstraint
  * @see TaskDto
  * */
 class TaskFirebaseApi
@@ -26,7 +26,7 @@ class TaskFirebaseApi
     /**
      * @param userUid
      * @return collectionPath for TaskTable document location
-     * @see TableConstraints.TASK_TABLE
+     * @see TableConstraint.TASK_TABLE
      * */
     private fun getCollectionPath(
         userUid: String
@@ -34,7 +34,7 @@ class TaskFirebaseApi
         return api
             .collection(userUid)
             .document("data")
-            .collection(TableConstraints.TASK_TABLE)
+            .collection(TableConstraint.TASK_TABLE)
     }
 
     /**
@@ -91,6 +91,5 @@ class TaskFirebaseApi
         documentReference.document(taskUid).delete().await()
 
     }
-
 
 }

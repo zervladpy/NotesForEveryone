@@ -2,7 +2,7 @@ package com.example.uf1_proyecto_compose.domain.use_case.task
 
 import android.util.Log
 import com.example.uf1_proyecto_compose.data.remote.auth.AuthApi
-import com.example.uf1_proyecto_compose.data.repository.TaskRepositoryImpl
+import com.example.uf1_proyecto_compose.data.repository.AppRepositoryImpl
 import com.example.uf1_proyecto_compose.domain.model.Task
 import com.example.uf1_proyecto_compose.utils.Response
 import kotlinx.coroutines.flow.Flow
@@ -14,13 +14,13 @@ import javax.inject.Inject
 /**
  * Use Case to retrieve Tasks from api
  * @param repository
- * @see TaskRepositoryImpl
+ * @see AppRepositoryImpl
  * @see Task
  * @see Response
  * */
 class GetTasks
 @Inject constructor(
-    private val repository: TaskRepositoryImpl,
+    private val repository: AppRepositoryImpl,
     private val authApi: AuthApi,
 ) {
 
@@ -46,11 +46,6 @@ class GetTasks
              * TODO (Make more stable)
              * */
 
-            repository.databaseDeleteAll(userUid)
-
-            repository.databaseInsertAll(userUid, result)
-
-            emit(Response.Success(data = repository.databaseGetAll(userUid)))
 
         } catch (e: HttpException) {
 

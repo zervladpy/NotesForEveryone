@@ -1,7 +1,7 @@
 package com.example.uf1_proyecto_compose.utils.constraint
 
-object TableConstraints {
+object UrlArgument {
 
-    const val TASK_TABLE = "tasks"
+    const val TASK_UID = "taskUid"
 
 }

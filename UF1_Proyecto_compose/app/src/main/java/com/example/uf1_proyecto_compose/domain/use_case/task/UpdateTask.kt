@@ -2,7 +2,7 @@ package com.example.uf1_proyecto_compose.domain.use_case.task
 
 import com.example.uf1_proyecto_compose.data.remote.auth.AuthApi
 import com.example.uf1_proyecto_compose.domain.model.Task
-import com.example.uf1_proyecto_compose.domain.repository.TaskRepository
+import com.example.uf1_proyecto_compose.domain.repository.AppRepository
 import com.example.uf1_proyecto_compose.utils.Response
 import com.google.firebase.firestore.FirebaseFirestoreException
 import kotlinx.coroutines.flow.Flow
@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 class UpdateTask
 @Inject constructor(
-    private val repository: TaskRepository,
+    private val repository: AppRepository,
     private val authApi: AuthApi,
 ) {
 

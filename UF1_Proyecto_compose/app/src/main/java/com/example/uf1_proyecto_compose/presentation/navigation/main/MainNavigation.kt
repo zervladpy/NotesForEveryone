@@ -1,6 +1,5 @@
 package com.example.uf1_proyecto_compose.presentation.navigation.main
 
-import android.util.Log
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.rememberDrawerState
@@ -38,7 +37,6 @@ fun MainNavigation() {
         fun openDrawer() {
             scope.launch {
                 drawerState.apply {
-                    Log.d("Drawer State", "opening")
                     open()
                 }
             }

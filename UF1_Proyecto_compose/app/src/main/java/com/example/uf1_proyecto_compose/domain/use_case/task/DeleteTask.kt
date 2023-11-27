@@ -1,8 +1,8 @@
 package com.example.uf1_proyecto_compose.domain.use_case.task
 
-import com.example.uf1_proyecto_compose.data.remote.auth.AuthApi
-import com.example.uf1_proyecto_compose.data.repository.TaskRepositoryImpl
+import com.example.uf1_proyecto_compose.data.repository.AppRepositoryImpl
 import com.example.uf1_proyecto_compose.domain.model.Task
+import com.example.uf1_proyecto_compose.domain.repository.AuthRepository
 import com.example.uf1_proyecto_compose.utils.Response
 import com.google.firebase.firestore.FirebaseFirestoreException
 import kotlinx.coroutines.flow.Flow
@@ -14,14 +14,14 @@ import javax.inject.Inject
 /**
  * Use Case to delete a Task from api
  * @param repository
- * @see TaskRepositoryImpl
+ * @see AppRepositoryImpl
  * @see Task
  * @see Response
  * */
 class DeleteTask
 @Inject constructor(
-    private val repository: TaskRepositoryImpl,
-    private val authApi: AuthApi,
+    private val repository: AppRepositoryImpl,
+    private val authRepository: AuthRepository,
 ) {
 
     /**
@@ -29,7 +29,7 @@ class DeleteTask
      */
 
     suspend operator fun invoke(
-        userUid: String = authApi.currentUser!!.uid,
+        userUid: String = authRepository.currentUser!!.uid, // replace
         taskUid: String,
     ): Flow<Response<Unit>> = flow {
         try {
@@ -37,8 +37,6 @@ class DeleteTask
             emit(Response.Loading())
 
             repository.apiDeleteById(userUid, taskUid)
-
-            repository.databaseDeleteAll(userUid)
 
             emit(Response.Success())
 

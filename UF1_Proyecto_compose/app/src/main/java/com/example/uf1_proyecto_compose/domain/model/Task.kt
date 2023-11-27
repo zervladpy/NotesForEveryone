@@ -2,8 +2,8 @@ package com.example.uf1_proyecto_compose.domain.model
 
 import com.example.uf1_proyecto_compose.data.local.entity.TaskEntity
 import com.example.uf1_proyecto_compose.data.remote.dto.TaskDto
+import com.example.uf1_proyecto_compose.utils.formatter.FormatterConstraint
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 data class Task(
     val uid: String = "",
@@ -12,27 +12,35 @@ data class Task(
     val done: Boolean = false,
     val creationDate: LocalDateTime = LocalDateTime.now(),
     val synchronized: Boolean = false,
+    val progression: Float = 0f,
+    val subtasks: List<SubTask> = emptyList(),
 )
 
 fun Task.toDto(): TaskDto {
     return TaskDto(
-        uid,
-        title,
-        description,
-        done,
-        creationDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")).toString(),
-        synchronized
+        uid = uid,
+        title = title,
+        description = description,
+        done = done,
+        creationDate = creationDate
+            .format(FormatterConstraint.dateFormat)
+            .toString(),
+        synchronized = synchronized,
+        progression = progression.toInt(),
+        subtasks = subtasks.map { it.toDto() },
     )
 }
 
-fun Task.toEntity(): TaskEntity {
+fun Task.toEntity(userUid: String): TaskEntity {
     return TaskEntity(
-        uid,
-        title,
-        description,
-        done,
-        creationDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")).toString(),
-        synchronized
+        uid = uid,
+        title = title,
+        description = description,
+        creationDate = creationDate.format(FormatterConstraint.dateFormat),
+        synced = synchronized,
+        progress = progression.toInt(),
+        done = done,
+        userUid = userUid
     )
 }
 

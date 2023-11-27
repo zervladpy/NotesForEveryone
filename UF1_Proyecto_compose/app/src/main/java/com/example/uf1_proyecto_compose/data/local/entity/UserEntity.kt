@@ -3,9 +3,20 @@ package com.example.uf1_proyecto_compose.data.local.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.uf1_proyecto_compose.domain.model.User
 
 @Entity(tableName = "users")
 data class UserEntity(
-    @PrimaryKey val uid: String,
-    @ColumnInfo(name = "display_name") val displayName: String?
+    @PrimaryKey
+    @ColumnInfo(name = "id")
+    val uid: String,
+    @ColumnInfo(name = "display_name")
+    val displayName: String?
 )
+
+fun UserEntity.toDomain(): User {
+    return User(
+        uid = uid,
+        displayName = displayName ?: ""
+    )
+}
