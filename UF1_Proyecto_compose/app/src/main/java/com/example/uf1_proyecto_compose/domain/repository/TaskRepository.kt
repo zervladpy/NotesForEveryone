@@ -14,7 +14,13 @@ interface TaskRepository {
 
     suspend fun apiDeleteById(userUid: String, taskUid: String)
 
+    suspend fun databaseGetAll(userUid: String): List<Task>
+
     suspend fun databaseInsertAll(userUid: String, listTasks: List<Task>)
+
+    suspend fun databaseDeleteByUid(userUid: String, taskUid: String)
+
+    suspend fun databaseGetByUid(userUid: String, taskUid: String): Task
 
     suspend fun databaseDeleteAll(userUid: String)
 

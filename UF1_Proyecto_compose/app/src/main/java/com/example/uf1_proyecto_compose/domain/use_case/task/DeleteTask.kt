@@ -1,5 +1,6 @@
 package com.example.uf1_proyecto_compose.domain.use_case.task
 
+import com.example.uf1_proyecto_compose.data.remote.auth.AuthApi
 import com.example.uf1_proyecto_compose.data.repository.TaskRepositoryImpl
 import com.example.uf1_proyecto_compose.domain.model.Task
 import com.example.uf1_proyecto_compose.utils.Response
@@ -19,7 +20,8 @@ import javax.inject.Inject
  * */
 class DeleteTask
 @Inject constructor(
-    private val repository: TaskRepositoryImpl
+    private val repository: TaskRepositoryImpl,
+    private val authApi: AuthApi,
 ) {
 
     /**
@@ -27,8 +29,8 @@ class DeleteTask
      */
 
     suspend operator fun invoke(
-        userUid: String,
-        taskUid: String
+        userUid: String = authApi.currentUser!!.uid,
+        taskUid: String,
     ): Flow<Response<Unit>> = flow {
         try {
 
@@ -36,7 +38,7 @@ class DeleteTask
 
             repository.apiDeleteById(userUid, taskUid)
 
-            /// TODO (Delete from local Database too)
+            repository.databaseDeleteAll(userUid)
 
             emit(Response.Success())
 

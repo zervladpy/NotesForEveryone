@@ -2,9 +2,9 @@ package com.example.uf1_proyecto_compose.data.remote.dto
 
 import com.example.uf1_proyecto_compose.data.local.entity.TaskEntity
 import com.example.uf1_proyecto_compose.domain.model.Task
+import com.example.uf1_proyecto_compose.utils.formatter.FormatterConstraint
 import com.google.gson.annotations.SerializedName
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 data class TaskDto(
     @SerializedName("uid") val uid: String = "",
@@ -17,12 +17,15 @@ data class TaskDto(
 
 fun TaskDto.toDomain(): Task {
     return Task(
-        uid,
-        title,
-        description,
-        done,
-        LocalDateTime.parse(creationDate, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
-        synchronized
+        uid = uid,
+        title = title,
+        description = description,
+        done = done,
+        creationDate = LocalDateTime.parse(
+            creationDate,
+            FormatterConstraint.dateFormat
+        ),
+        synchronized = synchronized
     )
 }
 

@@ -16,7 +16,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.uf1_proyecto_compose.presentation.ui.theme.UF1_Proyecto_composeTheme as appTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InputTextFieldWithLabel(
     modifier: Modifier = Modifier,
@@ -49,7 +48,6 @@ fun InputTextFieldWithLabel(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InputTextFieldWithPlaceHolder(
     modifier: Modifier = Modifier,
@@ -83,7 +81,7 @@ fun InputTextFieldWithPlaceHolder(
 @Preview(name = "Light Mode", showBackground = true)
 @Preview(name = "Dark Mode", showBackground = true, uiMode = UI_MODE_NIGHT_YES)
 @Composable
-fun InputTextFieldPreview() {
+private fun InputTextFieldPreview() {
     appTheme {
         Surface(
             modifier = Modifier

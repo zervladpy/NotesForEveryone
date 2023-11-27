@@ -11,10 +11,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.uf1_proyecto_compose.presentation.calendar_screen.CalendarScreen
 import com.example.uf1_proyecto_compose.presentation.common.drawer.DrawerContent
-import com.example.uf1_proyecto_compose.presentation.home_screen.HomeScreen
-import com.example.uf1_proyecto_compose.presentation.task_screen.TaskScreen
+import com.example.uf1_proyecto_compose.presentation.screens.home.HomeScreen
+import com.example.uf1_proyecto_compose.presentation.screens.tasks.TaskCreateScreen
+import com.example.uf1_proyecto_compose.presentation.screens.tasks.TaskDetailScreen
+import com.example.uf1_proyecto_compose.presentation.screens.tasks.TaskListScreen
 import kotlinx.coroutines.launch
 
 @Composable
@@ -45,45 +46,45 @@ fun MainNavigation() {
 
         NavHost(
             navController = navController,
-            startDestination = MainNavRoutes.HOME_SCREEN
+            startDestination = "home"
         ) {
 
             composable(
-                route = MainNavRoutes.HOME_SCREEN
+                route = "home"
             ) {
                 HomeScreen(
                     navController = navController,
-                    openDrawer = { openDrawer() }
+                    openDrawer = { openDrawer() },
                 )
             }
 
             composable(
-                route = MainNavRoutes.TASK_SCREEN
+                route = "tasks"
             ) {
-                TaskScreen(
+                TaskListScreen(
                     navController = navController,
+                    openDrawer = { openDrawer() },
                 )
             }
 
             composable(
-                route = MainNavRoutes.TASK_SCREEN_TASK_UID,
+                route = "tasks/{taskUid}",
                 arguments = listOf(navArgument("taskUid") { type = NavType.StringType })
             ) {
 
-                TaskScreen(
+                TaskDetailScreen(
                     navController = navController,
-                    taskUid = it.arguments?.getString("taskUid")
+                    uid = it.arguments!!.getString("taskUid")!!
                 )
             }
 
             composable(
-                route = MainNavRoutes.CALENDAR_SCREEN,
+                route = "tasks/create",
             ) {
-                CalendarScreen(
-                    openDrawer = { openDrawer() }
+                TaskCreateScreen(
+                    navController = navController,
                 )
             }
-
 
         }
     }

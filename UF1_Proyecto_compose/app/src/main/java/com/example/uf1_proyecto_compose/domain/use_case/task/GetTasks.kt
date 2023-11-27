@@ -1,5 +1,7 @@
 package com.example.uf1_proyecto_compose.domain.use_case.task
 
+import android.util.Log
+import com.example.uf1_proyecto_compose.data.remote.auth.AuthApi
 import com.example.uf1_proyecto_compose.data.repository.TaskRepositoryImpl
 import com.example.uf1_proyecto_compose.domain.model.Task
 import com.example.uf1_proyecto_compose.utils.Response
@@ -18,15 +20,19 @@ import javax.inject.Inject
  * */
 class GetTasks
 @Inject constructor(
-    private val repository: TaskRepositoryImpl
+    private val repository: TaskRepositoryImpl,
+    private val authApi: AuthApi,
 ) {
 
     /**
      *  TODO(Add Localizations)
      */
 
+    /**
+     * By default current user uid
+     * */
     operator fun invoke(
-        userUid: String
+        userUid: String = authApi.currentUser!!.uid,
     ): Flow<Response<List<Task>>> = flow {
         try {
 
@@ -34,11 +40,17 @@ class GetTasks
 
             val result = repository.apiGetAll(userUid)
 
+            Log.d("GetTasksUseCase", result.toString())
+
             /**
-             * Delete from local and insert new result
+             * TODO (Make more stable)
              * */
 
-            emit(Response.Success(data = result))
+            repository.databaseDeleteAll(userUid)
+
+            repository.databaseInsertAll(userUid, result)
+
+            emit(Response.Success(data = repository.databaseGetAll(userUid)))
 
         } catch (e: HttpException) {
 

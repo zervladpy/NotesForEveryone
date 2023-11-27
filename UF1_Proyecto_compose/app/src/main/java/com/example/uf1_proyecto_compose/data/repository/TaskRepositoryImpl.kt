@@ -1,6 +1,7 @@
 package com.example.uf1_proyecto_compose.data.repository
 
 import com.example.uf1_proyecto_compose.data.local.dao.TaskDao
+import com.example.uf1_proyecto_compose.data.local.entity.toDomain
 import com.example.uf1_proyecto_compose.data.remote.dto.toDomain
 import com.example.uf1_proyecto_compose.data.remote.task.TaskApi
 import com.example.uf1_proyecto_compose.domain.model.Task
@@ -12,7 +13,7 @@ import javax.inject.Inject
 class TaskRepositoryImpl
 @Inject constructor(
     private val api: TaskApi,
-    private val dao: TaskDao
+    private val dao: TaskDao,
 ) : TaskRepository {
     override suspend fun apiGetAll(userUid: String): List<Task> {
         return api.getRecords(userUid).map { it.toDomain() }
@@ -34,8 +35,20 @@ class TaskRepositoryImpl
         api.deleteRecord(userUid, taskUid)
     }
 
+    override suspend fun databaseGetAll(userUid: String): List<Task> {
+        return dao.getAll().map { it.toDomain() }
+    }
+
     override suspend fun databaseInsertAll(userUid: String, listTasks: List<Task>) {
         dao.insertAll(listTasks.map { it.toEntity() })
+    }
+
+    override suspend fun databaseGetByUid(userUid: String, taskUid: String): Task {
+        return dao.getTaskByUid(taskUid)!!.toDomain()
+    }
+
+    override suspend fun databaseDeleteByUid(userUid: String, taskUid: String) {
+        dao.deleteByUid(taskUid)
     }
 
     override suspend fun databaseDeleteAll(userUid: String) {

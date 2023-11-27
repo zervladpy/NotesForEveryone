@@ -2,8 +2,8 @@ package com.example.uf1_proyecto_compose.utils.formatter
 
 import java.time.format.DateTimeFormatter
 
-object DateFormatter {
+object FormatterConstraint {
 
-    val dateHourFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+    val dateFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
 
 }

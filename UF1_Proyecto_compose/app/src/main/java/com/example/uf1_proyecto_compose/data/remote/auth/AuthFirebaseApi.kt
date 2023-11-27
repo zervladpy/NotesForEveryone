@@ -7,9 +7,8 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class AuthFirebaseApi @Inject constructor(
-    private val api: FirebaseAuth
+    private val api: FirebaseAuth,
 ) : AuthApi {
-
     override var currentUser: UserDto? = null
         get() = api.currentUser?.toDto()
         private set
