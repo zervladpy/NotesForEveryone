@@ -1,21 +1,27 @@
 package com.example.uf1_proyecto_compose.data.repository
 
+import com.example.uf1_proyecto_compose.data.local.dao.AppDao
 import com.example.uf1_proyecto_compose.data.remote.auth.AuthApi
 import com.example.uf1_proyecto_compose.data.remote.dto.toDomain
 import com.example.uf1_proyecto_compose.domain.model.User
+import com.example.uf1_proyecto_compose.domain.model.toEntity
 import com.example.uf1_proyecto_compose.domain.repository.AuthRepository
 import javax.inject.Inject
 
 class AuthRepositoryImpl
 @Inject constructor(
     private val api: AuthApi,
+    private val dao: AppDao
 ) : AuthRepository {
 
     override val currentUser: User?
         get() = api.currentUser?.toDomain()
 
     override suspend fun loginAnonymously() {
+
         api.loginAnonymously()
+
+
     }
 
     override suspend fun loginWithEmailAndPassword(email: String, password: String) {
@@ -33,5 +39,9 @@ class AuthRepositoryImpl
     override suspend fun logout() {
         api.logout()
     }
-    
+
+    override suspend fun addUserToLocal(user: User) {
+        dao.insertUser(user.toEntity())
+    }
+
 }

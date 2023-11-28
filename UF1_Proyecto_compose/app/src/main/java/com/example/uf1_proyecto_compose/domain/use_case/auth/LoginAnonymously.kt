@@ -1,6 +1,6 @@
 package com.example.uf1_proyecto_compose.domain.use_case.auth
 
-import com.example.uf1_proyecto_compose.data.repository.AuthRepositoryImpl
+import com.example.uf1_proyecto_compose.domain.repository.AuthRepository
 import com.example.uf1_proyecto_compose.utils.Response
 import com.google.firebase.auth.FirebaseAuthException
 import kotlinx.coroutines.flow.Flow
@@ -11,7 +11,8 @@ import javax.inject.Inject
 
 class LoginAnonymously
 @Inject constructor(
-    private val repository: AuthRepositoryImpl,
+    private val repository: AuthRepository,
+    private val getUser: GetCurrentUserUseCase
 ) {
 
     operator fun invoke(
@@ -21,6 +22,8 @@ class LoginAnonymously
             emit(Response.Loading())
 
             repository.loginAnonymously()
+
+            getUser()?.let { repository.addUserToLocal(it) }
 
             emit(Response.Success())
         } catch (e: FirebaseAuthException) {

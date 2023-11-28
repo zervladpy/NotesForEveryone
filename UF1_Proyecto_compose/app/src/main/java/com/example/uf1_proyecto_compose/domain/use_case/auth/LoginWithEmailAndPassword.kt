@@ -12,7 +12,8 @@ import javax.inject.Inject
 
 class LoginWithEmailAndPassword
 @Inject constructor(
-    private val repository: AuthRepository
+    private val repository: AuthRepository,
+    private val getUser: GetCurrentUserUseCase
 ) {
 
     operator fun invoke(
@@ -23,6 +24,7 @@ class LoginWithEmailAndPassword
             emit(Response.Loading())
 
             repository.loginWithEmailAndPassword(email, password)
+            getUser()?.let { repository.addUserToLocal(it) }
 
             emit(Response.Success())
         } catch (e: FirebaseAuthException) {

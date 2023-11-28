@@ -33,9 +33,9 @@ interface AppRepository {
 
     suspend fun databaseUpdateTask(task: Task)
 
-    suspend fun databaseGetUserTasks(user: User): List<Task>
+    suspend fun databaseGetUserTasks(userUid: String): List<Task>
 
-    suspend fun databaseDeleteUserTasks(user: User)
+    suspend fun databaseDeleteUserTasks(userUid: String)
 
     suspend fun databaseSyncUserTasks(user: User)
 

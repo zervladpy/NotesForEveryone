@@ -16,4 +16,6 @@ interface AuthRepository {
 
     suspend fun logout()
 
+    suspend fun addUserToLocal(user: User)
+
 }

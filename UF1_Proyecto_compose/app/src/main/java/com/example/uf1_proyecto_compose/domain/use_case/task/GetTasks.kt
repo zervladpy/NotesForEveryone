@@ -1,6 +1,5 @@
 package com.example.uf1_proyecto_compose.domain.use_case.task
 
-import android.util.Log
 import com.example.uf1_proyecto_compose.data.remote.auth.AuthApi
 import com.example.uf1_proyecto_compose.data.repository.AppRepositoryImpl
 import com.example.uf1_proyecto_compose.domain.model.Task
@@ -38,14 +37,15 @@ class GetTasks
 
             emit(Response.Loading())
 
-            val result = repository.apiGetAll(userUid)
+            var result = repository.apiGetAll(userUid)
 
-            Log.d("GetTasksUseCase", result.toString())
+            repository.databaseDeleteUserTasks(userUid)
 
-            /**
-             * TODO (Make more stable)
-             * */
+            repository.databaseInsertManyTasks(userUid, result)
 
+            result = repository.databaseGetUserTasks(userUid)
+
+            emit(Response.Success(result))
 
         } catch (e: HttpException) {
 

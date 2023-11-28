@@ -28,7 +28,9 @@ fun AuthNavigation(
         composable(
             route = routes.LANDING_SCREEN
         ) {
-            LandingScreen()
+            LandingScreen(
+                navController = navController
+            )
         }
 
         composable(

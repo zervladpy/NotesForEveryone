@@ -105,8 +105,8 @@ interface AppDao {
      * @return A list of all tasks related to the user
      * */
     @Transaction
-    @Query("SELECT * FROM tasks WHERE id = :userUid")
-    suspend fun getUserWithTasks(userUid: String): UserWithTasks
+    @Query("SELECT * FROM tasks WHERE user_id = :userUid")
+    suspend fun getUserTasks(userUid: String): List<TaskEntity>
 
     /**
      * Gets all Tasks from tasks table related to a user

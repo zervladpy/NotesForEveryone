@@ -1,9 +1,11 @@
 package com.example.uf1_proyecto_compose.data.remote.task
 
+import com.example.uf1_proyecto_compose.data.remote.dto.SubTaskDto
 import com.example.uf1_proyecto_compose.data.remote.dto.TaskDto
 import com.example.uf1_proyecto_compose.utils.constraint.TableConstraint
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -37,6 +39,7 @@ class TaskFirebaseApi
             .collection(TableConstraint.TASK_TABLE)
     }
 
+
     /**
      * Gets all TaskDto records for a specified user
      * @param userUid user identification
@@ -44,12 +47,25 @@ class TaskFirebaseApi
      * */
     override suspend fun getRecords(userUid: String): List<TaskDto> {
 
+        val tasks = mutableListOf<TaskDto>()
+
         val collection = getCollectionPath(userUid)
 
-        val result = collection.get().await()
+        val result: QuerySnapshot = collection.get().await()
 
-        return result.documents.map { it.toObject()!! }
+        if (result.documents.isNotEmpty()) return tasks
 
+        for (doc in result.documents) {
+            val subResult =
+                getCollectionPath(userUid).document(doc.id).collection("subtasks").get().await()
+
+            val subTasks: List<SubTaskDto> = subResult.documents.map { it.toObject()!! }
+
+
+        }
+
+
+        return tasks;
     }
 
     /**
@@ -89,7 +105,6 @@ class TaskFirebaseApi
         val documentReference = getCollectionPath(userUid)
 
         documentReference.document(taskUid).delete().await()
-
     }
 
 }

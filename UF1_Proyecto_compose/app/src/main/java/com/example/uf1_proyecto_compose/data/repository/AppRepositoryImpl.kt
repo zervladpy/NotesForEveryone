@@ -83,12 +83,12 @@ class AppRepositoryImpl
         throw NotImplementedError("Update not yet implemented")
     }
 
-    override suspend fun databaseGetUserTasks(user: User): List<Task> {
-        return dao.getUserWithTasks(user.uid).tasks.map { it.toDomain(emptyList()) }
+    override suspend fun databaseGetUserTasks(userUid: String): List<Task> {
+        return dao.getUserTasks(userUid).map { it.toDomain(emptyList()) }
     }
 
-    override suspend fun databaseDeleteUserTasks(user: User) {
-        dao.deleteTasksWithUser(user.uid)
+    override suspend fun databaseDeleteUserTasks(userUid: String) {
+        dao.deleteTasksWithUser(userUid)
     }
 
     override suspend fun databaseSyncUserTasks(user: User) {

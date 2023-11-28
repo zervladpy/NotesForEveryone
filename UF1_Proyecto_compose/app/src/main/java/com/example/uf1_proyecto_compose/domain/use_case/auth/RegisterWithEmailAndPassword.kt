@@ -11,7 +11,8 @@ import javax.inject.Inject
 
 class RegisterWithEmailAndPassword
 @Inject constructor(
-    private val repository: AuthRepository
+    private val repository: AuthRepository,
+    private val getUser: GetCurrentUserUseCase
 ) {
     operator fun invoke(
         email: String,
@@ -21,6 +22,8 @@ class RegisterWithEmailAndPassword
             emit(Response.Loading())
 
             repository.registerWithEmailAndPassword(email, password)
+
+            getUser()?.let { repository.addUserToLocal(it) }
 
             emit(Response.Success())
         } catch (e: FirebaseAuthException) {

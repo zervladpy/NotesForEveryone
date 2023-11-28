@@ -7,11 +7,10 @@ import com.example.uf1_proyecto_compose.data.local.entity.UserEntity
 
 data class UserWithTasks(
     @Embedded
-    val user: UserEntity,
+    val task: UserEntity,
     @Relation(
         parentColumn = "id",
         entityColumn = "user_id",
-        entity = TaskEntity::class
     )
     val tasks: List<TaskEntity>
 )

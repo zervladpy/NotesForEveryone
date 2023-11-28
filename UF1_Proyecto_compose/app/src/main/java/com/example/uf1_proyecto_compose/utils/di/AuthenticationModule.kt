@@ -1,5 +1,6 @@
 package com.example.uf1_proyecto_compose.utils.di
 
+import com.example.uf1_proyecto_compose.data.local.dao.AppDao
 import com.example.uf1_proyecto_compose.data.remote.auth.AuthApi
 import com.example.uf1_proyecto_compose.data.remote.auth.AuthFirebaseApi
 import com.example.uf1_proyecto_compose.data.repository.AuthRepositoryImpl
@@ -29,8 +30,9 @@ object AuthenticationModule {
     @Provides
     @Singleton
     fun provideAuthRepository(
-        authApi: AuthApi
-    ): AuthRepository = AuthRepositoryImpl(authApi)
+        authApi: AuthApi,
+        appDao: AppDao
+    ): AuthRepository = AuthRepositoryImpl(authApi, appDao)
 
     @Provides
     @Singleton

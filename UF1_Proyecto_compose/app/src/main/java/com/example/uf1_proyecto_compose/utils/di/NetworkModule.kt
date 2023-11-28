@@ -34,9 +34,9 @@ object NetworkModule {
     @Singleton
     @Provides
     fun provideTaskRepository(
-        taskRepository: TaskApi,
+        taskApi: TaskApi,
         appDao: AppDao,
-    ): AppRepository = AppRepositoryImpl(taskRepository, appDao)
+    ): AppRepository = AppRepositoryImpl(taskApi, appDao)
 
 
 }

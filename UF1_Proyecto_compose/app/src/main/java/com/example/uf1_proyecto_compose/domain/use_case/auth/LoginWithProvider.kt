@@ -11,7 +11,8 @@ import javax.inject.Inject
 
 class LoginWithProvider
 @Inject constructor(
-    private val repository: AuthRepository
+    private val repository: AuthRepository,
+    private val getUser: GetCurrentUserUseCase
 ) {
 
     suspend operator fun invoke(
@@ -21,6 +22,8 @@ class LoginWithProvider
             emit(Response.Loading())
 
             repository.loginWithProvider()
+
+            getUser()?.let { repository.addUserToLocal(it) }
 
             emit(Response.Success())
         } catch (e: FirebaseAuthException) {
