@@ -1,7 +1,7 @@
 package com.example.uf1_proyecto_compose.domain.use_case.task
 
 import com.example.uf1_proyecto_compose.data.remote.auth.AuthApi
-import com.example.uf1_proyecto_compose.data.repository.AppRepositoryImpl
+import com.example.uf1_proyecto_compose.data.repository.TaskRepositoryImpl
 import com.example.uf1_proyecto_compose.domain.model.Task
 import com.example.uf1_proyecto_compose.utils.Response
 import kotlinx.coroutines.flow.Flow
@@ -13,23 +13,16 @@ import javax.inject.Inject
 /**
  * Use Case to retrieve Tasks from api
  * @param repository
- * @see AppRepositoryImpl
+ * @see TaskRepositoryImpl
  * @see Task
  * @see Response
  * */
 class GetTasks
 @Inject constructor(
-    private val repository: AppRepositoryImpl,
+    private val repository: TaskRepositoryImpl,
     private val authApi: AuthApi,
 ) {
 
-    /**
-     *  TODO(Add Localizations)
-     */
-
-    /**
-     * By default current user uid
-     * */
     operator fun invoke(
         userUid: String = authApi.currentUser!!.uid,
     ): Flow<Response<List<Task>>> = flow {
@@ -37,13 +30,7 @@ class GetTasks
 
             emit(Response.Loading())
 
-            var result = repository.apiGetAll(userUid)
-
-            repository.databaseDeleteUserTasks(userUid)
-
-            repository.databaseInsertManyTasks(userUid, result)
-
-            result = repository.databaseGetUserTasks(userUid)
+            val result = repository.apiGetAll(userUid)
 
             emit(Response.Success(result))
 

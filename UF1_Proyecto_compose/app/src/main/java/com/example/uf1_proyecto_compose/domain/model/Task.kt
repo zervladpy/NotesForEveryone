@@ -13,7 +13,7 @@ data class Task(
     val creationDate: LocalDateTime = LocalDateTime.now(),
     val synchronized: Boolean = false,
     val progression: Float = 0f,
-    val subtasks: List<SubTask> = emptyList(),
+    val subtasks: List<Subtask> = emptyList(),
 )
 
 fun Task.toDto(): TaskDto {
@@ -41,6 +41,26 @@ fun Task.toEntity(userUid: String): TaskEntity {
         progress = progression.toInt(),
         done = done,
         userUid = userUid
+    )
+}
+
+fun Task.copyWith(
+    title: String? = null,
+    description: String? = null,
+    done: Boolean? = null,
+    synchronized: Boolean? = null,
+    progression: Float? = null,
+    subtasks: List<Subtask>? = null
+): Task {
+    return Task(
+        uid = uid,
+        title = title ?: this.title,
+        description = description ?: this.description,
+        done = done ?: this.done,
+        creationDate = creationDate,
+        synchronized = synchronized ?: this.synchronized,
+        progression = progression ?: this.progression,
+        subtasks = subtasks ?: this.subtasks
     )
 }
 

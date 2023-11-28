@@ -13,7 +13,7 @@ data class TaskDto(
     @SerializedName("creation_date") val creationDate: String = "",
     @SerializedName("synchronized") val synchronized: Boolean = false,
     @SerializedName("progression") val progression: Int = if (done) 100 else 0,
-    @SerializedName("subtasks") val subtasks: List<SubTaskDto> = emptyList(),
+    @SerializedName("subtasks") val subtasks: List<SubtaskDto> = emptyList(),
 )
 
 fun TaskDto.toDomain(): Task {
@@ -22,7 +22,8 @@ fun TaskDto.toDomain(): Task {
         title = title,
         description = description,
         done = done,
-        creationDate = LocalDateTime.parse(
+        creationDate = if (creationDate.isEmpty()) LocalDateTime.now()
+        else LocalDateTime.parse(
             creationDate,
             FormatterConstraint.dateFormat
         ),

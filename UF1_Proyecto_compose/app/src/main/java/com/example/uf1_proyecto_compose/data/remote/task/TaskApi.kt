@@ -7,39 +7,13 @@ import com.example.uf1_proyecto_compose.data.remote.dto.TaskDto
  * */
 interface TaskApi {
 
-    /**
-     *
-     * @param userUid
-     * @param taskDto
-     *
-     * @return Unit
-     * */
-    suspend fun insertRecord(userUid: String, taskDto: TaskDto)
+    suspend fun getAllTasks(userUid: String): List<TaskDto>
 
-    /**
-     *
-     * @param userUid
-     *
-     * @return Unit
-     * */
-    suspend fun getRecords(userUid: String): List<TaskDto>
+    suspend fun getOne(userUid: String, taskUid: String): TaskDto
 
-    /**
-     *
-     * @param userUid
-     * @param taskUid
-     *
-     * @return Unit
-     * */
-    suspend fun getRecord(userUid: String, taskUid: String): TaskDto
+    suspend fun insertTask(userUid: String, task: TaskDto)
 
-    /**
-     *
-     * @param userUid
-     * @param taskUid
-     *
-     * @return Unit
-     * */
-    suspend fun deleteRecord(userUid: String, taskUid: String)
+    suspend fun deleteTask(userUid: String, taskUid: String)
 
+    suspend fun updateTask(userUid: String, task: TaskDto)
 }

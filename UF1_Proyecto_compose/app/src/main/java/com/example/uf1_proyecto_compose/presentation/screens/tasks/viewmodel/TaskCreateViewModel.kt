@@ -25,6 +25,8 @@ class TaskCreateViewModel
     fun createTask(
         title: String,
         description: String,
+        onSuccess: () -> Unit,
+        onStateChange: (String) -> Unit
     ) {
 
         if (state.value.isLoading) return
@@ -46,14 +48,19 @@ class TaskCreateViewModel
                 }
 
                 is Response.Success -> {
-                    _state.value = TaskCreateState()
+                    _state.value = state.value.copy(
+                        isLoading = false,
+                        message = "Task Created"
+                    )
+                    onStateChange(state.value.message)
                 }
 
                 is Response.Error -> {
-                    _state.value =
-                        TaskCreateState(
-                            errorMessage = response.message ?: "Unexpected Error"
-                        )
+                    _state.value = state.value.copy(
+                        isLoading = false,
+                        message = response.message ?: "Something went wrong"
+                    )
+                    onStateChange(state.value.message)
                 }
             }
         }.launchIn(viewModelScope)
@@ -61,9 +68,13 @@ class TaskCreateViewModel
 
     fun checkTitle(value: String) {
         if (value.isEmpty()) {
-            _state.value = TaskCreateState(titleError = "Field must not be empty")
+            _state.value = state.value.copy(
+                titleError = "Field must not be empty"
+            )
         } else {
-            _state.value = TaskCreateState(titleError = "")
+            _state.value = state.value.copy(
+                titleError = ""
+            )
         }
     }
 

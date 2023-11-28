@@ -10,11 +10,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,19 +32,39 @@ import com.example.uf1_proyecto_compose.presentation.common.inputs.InputTextFiel
 import com.example.uf1_proyecto_compose.presentation.common.inputs.InputTextFieldWithPlaceHolder
 import com.example.uf1_proyecto_compose.presentation.screens.tasks.viewmodel.TaskCreateViewModel
 import com.example.uf1_proyecto_compose.presentation.ui.theme.UF1_Proyecto_composeTheme
+import kotlinx.coroutines.launch
 
 @Composable
 fun TaskCreateScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
 ) {
+
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+
+    fun sendStateChange(message: String) {
+        scope.launch {
+            snackbarHostState.showSnackbar(
+                message = message,
+            )
+        }
+    }
+
     Scaffold(
         topBar = {
             TaskCreateAppbar {
                 navController.popBackStack()
             }
         },
-        content = { TaskCreateContent(modifier.padding(it)) }
+        content = {
+            TaskCreateContent(
+                modifier.padding(it),
+                navController,
+                sendStateChange = { msg -> sendStateChange(msg) }
+            )
+        },
+        snackbarHost = { SnackbarHost(snackbarHostState) }
     )
 }
 
@@ -60,15 +83,18 @@ private fun TaskCreateAppbar(
 @Composable
 private fun TaskCreateContent(
     modifier: Modifier = Modifier,
-    viewModel: TaskCreateViewModel = hiltViewModel(),
+    navController: NavController,
+    sendStateChange: (String) -> Unit,
+    createTaskViewModel: TaskCreateViewModel = hiltViewModel(),
 ) {
 
-    val state = viewModel.state.value
+
+    val state = createTaskViewModel.state.value
 
     var title by remember { mutableStateOf("") }
     fun onTitleChanged(value: String) {
         title = value
-        viewModel.checkTitle(title)
+        createTaskViewModel.checkTitle(title)
     }
 
     var description by remember { mutableStateOf("") }
@@ -90,7 +116,7 @@ private fun TaskCreateContent(
             value = title,
             onEdit = { onTitleChanged(it) },
             errorText = state.titleError,
-            isError = state.errorMessage.isNotEmpty()
+            isError = state.message.isNotEmpty()
         )
 
         InputTextFieldWithPlaceHolder(
@@ -104,9 +130,15 @@ private fun TaskCreateContent(
             modifier = Modifier.fillMaxWidth(),
             text = "Create",
             onClick = {
-                viewModel.createTask(
+                createTaskViewModel.createTask(
                     title = title,
-                    description = description
+                    description = description,
+                    onSuccess = {
+                        navController.popBackStack()
+                    },
+                    onStateChange = {
+                        sendStateChange(it)
+                    }
                 )
             },
             enabled = state.titleError.isEmpty()

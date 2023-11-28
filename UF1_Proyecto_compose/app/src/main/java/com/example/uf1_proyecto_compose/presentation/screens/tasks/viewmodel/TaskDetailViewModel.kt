@@ -1,16 +1,18 @@
 package com.example.uf1_proyecto_compose.presentation.screens.tasks.viewmodel
 
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.uf1_proyecto_compose.domain.use_case.subtask.GetSubtasks
 import com.example.uf1_proyecto_compose.domain.use_case.task.GetTask
-import com.example.uf1_proyecto_compose.domain.use_case.task.UpdateTask
-import com.example.uf1_proyecto_compose.utils.Response
+import com.example.uf1_proyecto_compose.utils.Response.Error
+import com.example.uf1_proyecto_compose.utils.Response.Loading
+import com.example.uf1_proyecto_compose.utils.Response.Success
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
@@ -18,8 +20,8 @@ import javax.inject.Inject
 class TaskDetailViewModel
 @Inject constructor(
     private val getTask: GetTask,
-    private val updateTask: UpdateTask,
-    private val savedStateHandle: SavedStateHandle,
+    private val getSubtasks: GetSubtasks,
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     private val _state = mutableStateOf(TaskDetailState())
@@ -27,36 +29,67 @@ class TaskDetailViewModel
 
     init {
 
-        Log.d("SaveStateHandle", savedStateHandle.get<String>("taskUid") ?: "Null")
+        val taskUid: String = savedStateHandle.get<String>("taskUid") ?: ""
 
-        get(savedStateHandle.get<String>("taskUid") ?: "")
+        init(taskUid)
+
     }
 
-    fun get(
-        uid: String,
-    ) {
-        getTask(taskUid = uid).onEach { response ->
+    private fun init(taskUid: String) {
+
+        getTask(taskUid).onEach { response ->
+
             when (response) {
-                is Response.Loading -> {
-
-                    _state.value = TaskDetailState(isLoading = true)
-
+                is Loading -> {
+                    _state.value = state.value.copyWith(isLoading = true)
                 }
 
-                is Response.Error -> {
+                is Error -> {
                     _state.value =
-                        TaskDetailState(
-                            errorMessage = response.message ?: "Unexpected Error"
+                        state.value.copyWith(
+                            isLoading = false,
+                            errorMessage = response.message ?: "Failed to load task"
                         )
                 }
 
-                is Response.Success -> {
-
-                    _state.value = TaskDetailState(task = response.data!!)
-
+                is Success -> {
+                    _state.value = state.value.copyWith(
+                        isLoading = false,
+                        task = response.data!!
+                    )
                 }
             }
+
+        }.onCompletion {
+
+            getSubtasks(taskUid).onEach { response ->
+                when (response) {
+                    is Loading -> {
+                        _state.value = state.value.copyWith(
+                            isLoading = true
+                        )
+                    }
+
+                    is Error -> {
+                        _state.value = state.value.copyWith(
+                            isLoading = false,
+                            errorMessage = response.message ?: "Failed to load subtasks"
+                        )
+                    }
+
+                    is Success -> {
+                        _state.value = state.value.copyWith(
+                            isLoading = false,
+                            subtasks = response.data ?: emptyList()
+                        )
+                    }
+                }
+            }.launchIn(viewModelScope)
+
         }.launchIn(viewModelScope)
+
+
     }
+
 
 }

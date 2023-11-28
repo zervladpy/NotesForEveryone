@@ -18,10 +18,7 @@ class AuthRepositoryImpl
         get() = api.currentUser?.toDomain()
 
     override suspend fun loginAnonymously() {
-
         api.loginAnonymously()
-
-
     }
 
     override suspend fun loginWithEmailAndPassword(email: String, password: String) {

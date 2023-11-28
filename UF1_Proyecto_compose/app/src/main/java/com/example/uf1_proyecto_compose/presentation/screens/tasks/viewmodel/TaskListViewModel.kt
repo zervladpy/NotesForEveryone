@@ -1,6 +1,5 @@
 package com.example.uf1_proyecto_compose.presentation.screens.tasks.viewmodel
 
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -23,8 +22,6 @@ class TaskListViewModel
 
     init {
         getTasks().onEach { response ->
-
-            Log.d("TaskViewModel", response.data.toString())
 
             when (response) {
 

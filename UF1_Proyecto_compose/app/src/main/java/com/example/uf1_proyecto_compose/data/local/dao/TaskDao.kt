@@ -14,7 +14,7 @@ interface TaskDao {
     @Query("SELECT * FROM ${TableConstraint.TASK_TABLE}")
     suspend fun getAll(): List<TaskEntity>
 
-    @Query("SELECT * FROM ${TableConstraint.TASK_TABLE} WHERE uid = :taskUid")
+    @Query("SELECT * FROM ${TableConstraint.TASK_TABLE} WHERE id = :taskUid")
     suspend fun getTaskByUid(taskUid: String): TaskEntity?
 
     @Insert(entity = TaskEntity::class, onConflict = OnConflictStrategy.REPLACE)
@@ -23,7 +23,7 @@ interface TaskDao {
     @Query("DELETE FROM ${TableConstraint.TASK_TABLE} WHERE synced = 1")
     suspend fun deleteAll()
 
-    @Query("DELETE FROM ${TableConstraint.TASK_TABLE} WHERE uid = :taskUid")
+    @Query("DELETE FROM ${TableConstraint.TASK_TABLE} WHERE id = :taskUid")
     suspend fun deleteByUid(taskUid: String)
 
     @Update(entity = TaskEntity::class, onConflict = OnConflictStrategy.ABORT)
