@@ -1,10 +1,10 @@
 package com.example.uf1_proyecto_compose.data.remote.auth
 
-import com.example.uf1_proyecto_compose.data.remote.dto.UserDto
+import com.example.uf1_proyecto_compose.domain.model.User
 
 interface AuthApi {
 
-    val currentUser: UserDto?
+    val user: User?
 
     suspend fun loginAnonymously()
 

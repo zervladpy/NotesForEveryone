@@ -6,15 +6,11 @@ import com.google.firebase.auth.FirebaseUser
 data class User(
     var uid: String = "",
     val displayName: String = "",
-    var isAuthenticated: Boolean = false
-) {
+)
 
-}
-
-fun FirebaseUser.toDomain(isAuthenticated: Boolean = false) = User(
+fun FirebaseUser.toDomain() = User(
     uid = uid,
     displayName = displayName ?: "",
-    isAuthenticated = isAuthenticated
 )
 
 fun User.toEntity(): UserEntity {

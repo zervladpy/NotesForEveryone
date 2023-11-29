@@ -24,7 +24,7 @@ class GetTasks
 ) {
 
     operator fun invoke(
-        userUid: String = authApi.currentUser!!.uid,
+        userUid: String = authApi.user!!.uid,
     ): Flow<Response<List<Task>>> = flow {
         try {
 

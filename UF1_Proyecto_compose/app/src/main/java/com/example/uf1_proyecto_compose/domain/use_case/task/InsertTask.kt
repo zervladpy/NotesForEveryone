@@ -1,8 +1,9 @@
 package com.example.uf1_proyecto_compose.domain.use_case.task
 
-import com.example.uf1_proyecto_compose.data.remote.auth.AuthApi
 import com.example.uf1_proyecto_compose.data.repository.TaskRepositoryImpl
 import com.example.uf1_proyecto_compose.domain.model.Task
+import com.example.uf1_proyecto_compose.domain.repository.AuthRepository
+import com.example.uf1_proyecto_compose.domain.repository.TaskRepository
 import com.example.uf1_proyecto_compose.utils.Response
 import com.google.firebase.firestore.FirebaseFirestoreException
 import kotlinx.coroutines.flow.Flow
@@ -21,12 +22,12 @@ import javax.inject.Inject
  * */
 class InsertTask
 @Inject constructor(
-    private val repository: TaskRepositoryImpl,
-    private val authApi: AuthApi,
+    private val repository: TaskRepository,
+    private val authRepository: AuthRepository,
 ) {
 
     operator fun invoke(
-        userUid: String = authApi.currentUser!!.uid,
+        userUid: String = authRepository.user!!.uid,
         task: Task,
     ): Flow<Response<Unit>> = flow {
         try {

@@ -1,31 +1,29 @@
 package com.example.uf1_proyecto_compose.data.remote.auth
 
 import com.example.uf1_proyecto_compose.data.remote.dto.UserDto
+import com.example.uf1_proyecto_compose.domain.model.User
+import com.example.uf1_proyecto_compose.domain.model.toDomain
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
+/**
+ * On init adds AuthStateListener
+ * */
 class AuthFirebaseApi @Inject constructor(
     private val api: FirebaseAuth,
 ) : AuthApi {
-    override var currentUser: UserDto? = null
-        get() = api.currentUser?.toDto()
-        private set
+
+    override val user: User?
+        get() = api.currentUser?.toDomain()
 
     override suspend fun loginAnonymously() {
-
-        val result = api.signInAnonymously().await().user
-
-        currentUser = result?.toDto()
-
+        api.signInAnonymously().await().user
     }
 
     override suspend fun loginWithEmailAndPassword(email: String, password: String) {
-
-        val result = api.signInWithEmailAndPassword(email, password).await().user
-
-        currentUser = result?.toDto()
+        api.signInWithEmailAndPassword(email, password).await().user
     }
 
     /**
@@ -33,19 +31,19 @@ class AuthFirebaseApi @Inject constructor(
      * */
     override suspend fun loginWithProvider() {
         throw NotImplementedError()
+
+
     }
 
     override suspend fun registerWithEmailAndPassword(email: String, password: String) {
+        val user = api.createUserWithEmailAndPassword(email, password).await().user
 
-        val result = api.createUserWithEmailAndPassword(email, password).await().user
-
-        currentUser = result?.toDto()
     }
 
     override suspend fun logout() {
         api.signOut()
-        currentUser = null
     }
+
 }
 
 fun FirebaseUser.toDto(): UserDto {

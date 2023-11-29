@@ -29,7 +29,7 @@ class DeleteTask
      */
 
     suspend operator fun invoke(
-        userUid: String = authRepository.currentUser!!.uid, // replace
+        userUid: String = authRepository.user!!.uid, // replace
         taskUid: String,
     ): Flow<Response<Unit>> = flow {
         try {
