@@ -1,38 +1,38 @@
 package com.example.uf1_proyecto_compose.presentation.screens.tasks
 
-import android.content.res.Configuration
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
+import com.example.uf1_proyecto_compose.domain.model.Subtask
 import com.example.uf1_proyecto_compose.presentation.common.appbars.CenteredAppbar
 import com.example.uf1_proyecto_compose.presentation.common.buttons.N4EButton
-import com.example.uf1_proyecto_compose.presentation.common.inputs.InputTextFieldWithLabel
-import com.example.uf1_proyecto_compose.presentation.common.inputs.InputTextFieldWithPlaceHolder
+import com.example.uf1_proyecto_compose.presentation.common.inputs.N4ETextField
+import com.example.uf1_proyecto_compose.presentation.screens.tasks.component.SubtaskCreatePreview
 import com.example.uf1_proyecto_compose.presentation.screens.tasks.viewmodel.TaskCreateViewModel
-import com.example.uf1_proyecto_compose.presentation.ui.theme.UF1_Proyecto_composeTheme
-import kotlinx.coroutines.launch
+import java.util.UUID
 
 @Composable
 fun TaskCreateScreen(
@@ -40,16 +40,6 @@ fun TaskCreateScreen(
     navController: NavController,
 ) {
 
-    val snackbarHostState = remember { SnackbarHostState() }
-    val scope = rememberCoroutineScope()
-
-    fun sendStateChange(message: String) {
-        scope.launch {
-            snackbarHostState.showSnackbar(
-                message = message,
-            )
-        }
-    }
 
     Scaffold(
         topBar = {
@@ -61,10 +51,8 @@ fun TaskCreateScreen(
             TaskCreateContent(
                 modifier.padding(it),
                 navController,
-                sendStateChange = { msg -> sendStateChange(msg) }
             )
         },
-        snackbarHost = { SnackbarHost(snackbarHostState) }
     )
 }
 
@@ -75,7 +63,8 @@ private fun TaskCreateAppbar(
 
     CenteredAppbar(
         navIcon = Icons.AutoMirrored.Rounded.ArrowBack,
-        onNavigationIconClick = onNavigationClick
+        onNavigationIconClick = onNavigationClick,
+        title = "New Task"
     )
 
 }
@@ -84,12 +73,12 @@ private fun TaskCreateAppbar(
 private fun TaskCreateContent(
     modifier: Modifier = Modifier,
     navController: NavController,
-    sendStateChange: (String) -> Unit,
     createTaskViewModel: TaskCreateViewModel = hiltViewModel(),
 ) {
 
-
     val state = createTaskViewModel.state.value
+
+    val context = LocalContext.current
 
     var title by remember { mutableStateOf("") }
     fun onTitleChanged(value: String) {
@@ -102,6 +91,41 @@ private fun TaskCreateContent(
         description = value
     }
 
+    var subtaskTitle by remember { mutableStateOf("") }
+
+    fun onSubtaskTitleChanged(value: String) {
+        subtaskTitle = value
+    }
+
+    fun resetSubtaskTitle() {
+        subtaskTitle = ""
+    }
+
+    var subtasks by remember { mutableStateOf(emptyList<Subtask>()) }
+    fun addSubtask(item: Subtask) {
+        val helpSubtasks = mutableListOf<Subtask>();
+        subtasks.forEach { helpSubtasks.add(it) }
+        helpSubtasks.add(item)
+        subtasks = helpSubtasks
+    }
+
+    fun removeSubtask(item: Subtask) {
+        val helpSubtasks = subtasks.filter { it != item };
+        subtasks = helpSubtasks
+    }
+
+    fun createSubtask() {
+        if (subtaskTitle.isEmpty()) return
+        val subtask = Subtask(
+            uid = UUID.randomUUID().toString(),
+            title = subtaskTitle,
+            done = false
+        )
+
+        addSubtask(subtask)
+        resetSubtaskTitle()
+    }
+
     Column(
         modifier
             .fillMaxSize()
@@ -110,21 +134,90 @@ private fun TaskCreateContent(
         verticalArrangement = Arrangement.Center
     ) {
 
-        InputTextFieldWithLabel(
-            modifier = modifier.fillMaxWidth(),
-            label = "Title",
-            value = title,
-            onEdit = { onTitleChanged(it) },
-            errorText = state.titleError,
-            isError = state.message.isNotEmpty()
-        )
+        Column(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            val taskTitleLabel = "Task Title"
+            Text(
+                modifier = Modifier
+                    .padding(horizontal = 10.dp)
+                    .padding(bottom = 10.dp),
+                text = taskTitleLabel,
+                style = MaterialTheme.typography.titleMedium
+            )
+            N4ETextField(
+                modifier = Modifier.padding(),
+                placeholder = taskTitleLabel,
+                value = title,
+                onEdit = { onTitleChanged(it) },
+                isError = state.titleError.isNotEmpty(),
+                errorMessage = state.titleError,
+            )
+        }
 
-        InputTextFieldWithPlaceHolder(
-            modifier = modifier.fillMaxWidth(),
-            placeholder = "Description",
-            value = description,
-            onEdit = { onDescriptionChanged(it) },
-        )
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 10.dp)
+        ) {
+            val taskDescriptionLabel = "Task Description"
+            Text(
+                modifier = Modifier
+                    .padding(horizontal = 10.dp)
+                    .padding(bottom = 10.dp),
+                text = taskDescriptionLabel,
+                style = MaterialTheme.typography.titleMedium
+            )
+            N4ETextField(
+                placeholder = taskDescriptionLabel,
+                value = description,
+                onEdit = { onDescriptionChanged(it) },
+                maxLines = 3
+            )
+        }
+
+        Column(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+
+            val subtaskLabel = "Subtasks"
+
+            N4ETextField(
+                modifier = Modifier.padding(
+                    top = 10.dp
+                ),
+                placeholder = "Add Subtask",
+                value = subtaskTitle,
+                onEdit = { onSubtaskTitleChanged(it) },
+                trailingIcon = Icons.Rounded.Add,
+                trailingAction = {
+                    createSubtask()
+                }
+            )
+
+            Text(
+                modifier = Modifier
+                    .padding(horizontal = 10.dp)
+                    .padding(bottom = 10.dp),
+                text = subtaskLabel,
+                style = MaterialTheme.typography.titleSmall
+            )
+
+            LazyColumn {
+                // Show subtasks with a erase button
+                items(subtasks) { subtask ->
+                    SubtaskCreatePreview(
+                        modifier = Modifier.padding(top = 10.dp),
+                        subtask = subtask,
+                        action = { removeSubtask(it) }
+                    )
+                }
+            }
+        }
+
+        Spacer(modifier = modifier.weight(1f))
+
+        // TODO( button goes out of the screen)
 
         N4EButton(
             modifier = Modifier.fillMaxWidth(),
@@ -133,33 +226,12 @@ private fun TaskCreateContent(
                 createTaskViewModel.createTask(
                     title = title,
                     description = description,
-                    onSuccess = {
-                        navController.popBackStack()
-                    },
-                    onStateChange = {
-                        sendStateChange(it)
+                    showState = {
+                        Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
                     }
                 )
             },
-            enabled = state.titleError.isEmpty()
+            enabled = state.titleError.isEmpty(),
         )
-    }
-
-}
-
-@Preview(name = "Light Mode", showBackground = true)
-@Preview(name = "Dark Mode", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-fun TaskCreateScreenPreview(
-    modifier: Modifier = Modifier,
-) {
-    UF1_Proyecto_composeTheme {
-        Surface(
-            color = MaterialTheme.colorScheme.background
-        ) {
-            TaskCreateScreen(
-                navController = rememberNavController()
-            )
-        }
     }
 }

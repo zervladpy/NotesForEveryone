@@ -25,8 +25,7 @@ class TaskCreateViewModel
     fun createTask(
         title: String,
         description: String,
-        onSuccess: () -> Unit,
-        onStateChange: (String) -> Unit
+        showState: (String) -> Unit,
     ) {
 
         if (state.value.isLoading) return
@@ -52,7 +51,10 @@ class TaskCreateViewModel
                         isLoading = false,
                         message = "Task Created"
                     )
-                    onStateChange(state.value.message)
+
+                    showState(state.value.message)
+
+                    // Navigate to task preview??
                 }
 
                 is Response.Error -> {
@@ -60,7 +62,7 @@ class TaskCreateViewModel
                         isLoading = false,
                         message = response.message ?: "Something went wrong"
                     )
-                    onStateChange(state.value.message)
+                    showState(state.value.message)
                 }
             }
         }.launchIn(viewModelScope)
