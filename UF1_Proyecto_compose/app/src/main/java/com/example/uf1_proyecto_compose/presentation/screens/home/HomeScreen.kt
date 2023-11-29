@@ -62,7 +62,7 @@ private fun HomeAppbar(
 
                 Text(
                     modifier = Modifier.padding(bottom = 10.dp),
-                    text = "May 23, 2023",
+                    text = "May 23, 2023", // TODO(Set true date)
                     style = MaterialTheme.typography.titleSmall
                 )
 
@@ -90,6 +90,8 @@ private fun HomeContent(
     ) {
 
         /// TODO(Total Task Progression indicator)
+
+        /// TODO(Show )
 
     }
 
