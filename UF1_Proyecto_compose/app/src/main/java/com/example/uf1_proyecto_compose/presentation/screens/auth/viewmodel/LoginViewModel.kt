@@ -28,15 +28,28 @@ class LoginViewModel
      * @param password
      * */
     fun login(email: String, password: String) {
+
+        if (state.value.isLoading) return
+
+        checkEmail(email)
+        checkPassword(password)
+
         loginWithEmailAndPassword(email, password).onEach { response ->
             when (response) {
                 is Response.Loading -> {
                     _state.value = LoginState(isLoading = true)
                 }
 
-                is Response.Success -> {}
+                is Response.Success -> {
+                    _state.value = LoginState(isLoading = false)
+                }
 
-                is Response.Error -> {}
+                is Response.Error -> {
+                    _state.value = state.value.copy(
+                        isLoading = false,
+                        message = response.message ?: "Unexpected Error"
+                    )
+                }
             }
         }.launchIn(viewModelScope)
     }
@@ -58,8 +71,37 @@ class LoginViewModel
         }.launchIn(viewModelScope)
     }
 
-    fun checkEmail(email: String) {}
+    fun checkEmail(email: String) {
 
-    fun checkPassword(password: String) {}
+        if (email.isEmpty()) {
+            _state.value = state.value.copy(
+                emailError = "* Required field"
+            )
+        } else if (!email.contains("@")) {
+            _state.value = state.value.copy(
+                emailError = "* Email is badly formatted"
+            )
+        } else {
+            _state.value = state.value.copy(
+                emailError = ""
+            )
+        }
+
+
+    }
+
+    fun checkPassword(password: String) {
+
+        if (password.isEmpty()) {
+            _state.value = state.value.copy(
+                passwordError = "* Required field"
+            )
+        } else {
+            _state.value = state.value.copy(
+                passwordError = ""
+            )
+        }
+
+    }
 
 }

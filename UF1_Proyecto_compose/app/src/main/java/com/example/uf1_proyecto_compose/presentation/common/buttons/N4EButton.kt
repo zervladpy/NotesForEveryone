@@ -19,7 +19,7 @@ fun N4EButton(
     modifier: Modifier = Modifier,
     text: String,
     onClick: () -> Unit,
-    enabled: Boolean = true
+    enabled: Boolean = true,
 ) {
 
     Button(
@@ -33,12 +33,11 @@ fun N4EButton(
 
 }
 
-
 @Preview(name = "Light Mode", showBackground = true)
 @Preview(name = "Dark Mode", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun N4EButtonPreview(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     UF1_Proyecto_composeTheme {
         Surface(

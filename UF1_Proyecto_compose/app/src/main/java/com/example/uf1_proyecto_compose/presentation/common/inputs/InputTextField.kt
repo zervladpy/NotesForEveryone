@@ -20,6 +20,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.uf1_proyecto_compose.presentation.ui.theme.UF1_Proyecto_composeTheme as appTheme
@@ -92,6 +94,7 @@ fun N4ETextField(
     modifier: Modifier = Modifier,
     value: String = "",
     placeholder: String = "",
+    label: String = "",
     onEdit: (String) -> Unit = {},
     leadingIcon: ImageVector? = null,
     trailingIcon: ImageVector? = null,
@@ -108,7 +111,7 @@ fun N4ETextField(
     val transparent = Color.Transparent
 
     Column(
-        modifier = modifier
+        modifier = modifier.fillMaxWidth()
     ) {
         TextField(
             modifier = Modifier
@@ -180,7 +183,22 @@ fun N4ETextField(
                     )
                 }
             } else null,
+            label = if (value.isNotEmpty() && label.isNotEmpty()) {
+                {
+                    Text(
+                        text = label,
+                        color = if (isError) {
+                            errorColor
+                        } else {
+                            defaultColor
+                        },
+                    )
+                }
+            } else null,
             isError = isError,
+            visualTransformation = if (isPassword) {
+                PasswordVisualTransformation()
+            } else VisualTransformation.None,
         )
 
         if (isError) {

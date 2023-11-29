@@ -36,13 +36,13 @@ fun AuthNavigation(
         composable(
             route = routes.LOGIN_SCREEN
         ) {
-            LoginScreen()
+            LoginScreen(navController = navController)
         }
 
         composable(
             route = routes.REGISTER_SCREEN
         ) {
-            SignUpScreen()
+            SignUpScreen(navController = navController)
         }
 
     }
