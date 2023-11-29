@@ -25,6 +25,7 @@ fun MainNavigation() {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
     ModalNavigationDrawer(
+        
         drawerState = drawerState,
         gesturesEnabled = drawerState.isOpen,
         drawerContent = {

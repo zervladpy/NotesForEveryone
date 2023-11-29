@@ -11,7 +11,7 @@ import com.example.uf1_proyecto_compose.presentation.common.inputs.N4ETextField
 fun SubtaskCreatePreview(
     modifier: Modifier = Modifier,
     subtask: Subtask,
-    action: (Subtask) -> Unit,
+    action: () -> Unit,
 ) {
 
     N4ETextField(
@@ -19,7 +19,7 @@ fun SubtaskCreatePreview(
         value = subtask.title,
         isEditable = false,
         trailingIcon = Icons.Rounded.Delete,
-        trailingAction = { action(subtask) }
+        trailingAction = action
     )
 
 }

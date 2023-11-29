@@ -3,6 +3,7 @@ package com.example.uf1_proyecto_compose.domain.use_case.task
 import com.example.uf1_proyecto_compose.data.repository.TaskRepositoryImpl
 import com.example.uf1_proyecto_compose.domain.model.Task
 import com.example.uf1_proyecto_compose.domain.repository.AuthRepository
+import com.example.uf1_proyecto_compose.domain.repository.SubtaskRepository
 import com.example.uf1_proyecto_compose.domain.repository.TaskRepository
 import com.example.uf1_proyecto_compose.utils.Response
 import com.google.firebase.firestore.FirebaseFirestoreException
@@ -15,14 +16,15 @@ import javax.inject.Inject
 
 /**
  * Use Case to insert Task to api
- * @param repository
+ * @param taskRepository
  * @see TaskRepositoryImpl
  * @see Task
  * @see Response
  * */
 class InsertTask
 @Inject constructor(
-    private val repository: TaskRepository,
+    private val taskRepository: TaskRepository,
+    private val subtaskRepository: SubtaskRepository,
     private val authRepository: AuthRepository,
 ) {
 
@@ -33,7 +35,11 @@ class InsertTask
         try {
             emit(Response.Loading())
 
-            repository.apiInsert(userUid, task)
+            taskRepository.apiInsert(userUid, task)
+
+            task.subtasks.forEach {
+                subtaskRepository.insert(userUid, task.uid, it)
+            }
 
             emit(Response.Success())
 

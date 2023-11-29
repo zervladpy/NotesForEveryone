@@ -3,6 +3,7 @@ package com.example.uf1_proyecto_compose.data.repository
 import com.example.uf1_proyecto_compose.data.remote.dto.toDomain
 import com.example.uf1_proyecto_compose.data.remote.subtask.SubtaskApi
 import com.example.uf1_proyecto_compose.domain.model.Subtask
+import com.example.uf1_proyecto_compose.domain.model.toDto
 import com.example.uf1_proyecto_compose.domain.repository.SubtaskRepository
 import javax.inject.Inject
 
@@ -12,7 +13,10 @@ class SubtaskRepositoryImpl
 ) : SubtaskRepository {
     override suspend fun get(userUid: String, taskUid: String): List<Subtask> {
 
-
         return api.getAllSubtask(userUid, taskUid).map { it.toDomain() }
+    }
+
+    override suspend fun insert(userUid: String, taskUid: String, item: Subtask) {
+        api.insertSubtask(userUid = userUid, taskUid = taskUid, subtask = item.toDto())
     }
 }

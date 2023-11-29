@@ -111,6 +111,10 @@ private fun TaskDetailContent(
                 )
             }
 
+            for (subtask in it.subtasks) {
+                Text(text = subtask.title)
+            }
+
         }
     }
 

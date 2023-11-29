@@ -49,6 +49,7 @@ private fun HomeAppbar(
 
         ) {
             CenteredAppbar(
+
                 onNavigationIconClick = openDrawer,
 
                 )
