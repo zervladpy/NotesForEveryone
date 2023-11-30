@@ -36,7 +36,6 @@ class MainActivity : ComponentActivity(), FirebaseAuth.AuthStateListener {
                         AuthNavigation()
                     }
                 }
-
             }
         }
     }

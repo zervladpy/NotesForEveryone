@@ -36,7 +36,7 @@ class DeleteTask
 
             emit(Response.Loading())
 
-            repository.apiDeleteById(userUid, taskUid)
+            repository.delete(userUid, taskUid)
 
             emit(Response.Success())
 

@@ -30,7 +30,7 @@ class GetTask
 
             emit(Loading())
 
-            val result = repository.apiGetOne(userUid, taskUid)
+            val result = repository.get(userUid, taskUid)
 
             Log.d("GetTask UseCase", result.toString())
 

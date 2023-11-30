@@ -25,7 +25,9 @@ class GetTasks
     private val authApi: AuthRepository,
 ) {
 
-    val liveTasks = repository.tasks
+    val liveTasks: MutableLiveData<List<Task>> by lazy {
+        MutableLiveData<List<Task>>()
+    }
 
     operator fun invoke(
         userUid: String = authApi.user!!.uid,
@@ -34,7 +36,7 @@ class GetTasks
 
             emit(Response.Loading())
 
-            repository.apiGetAll(userUid)
+            repository.get(userUid)
 
             emit(Response.Success(repository.tasks))
 

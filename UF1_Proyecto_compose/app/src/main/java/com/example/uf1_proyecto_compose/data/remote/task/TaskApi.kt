@@ -7,13 +7,13 @@ import com.example.uf1_proyecto_compose.data.remote.dto.TaskDto
  * */
 interface TaskApi {
 
-    suspend fun getAllTasks(userUid: String): List<TaskDto>
+    suspend fun get(userUid: String): List<TaskDto>
 
-    suspend fun getOne(userUid: String, taskUid: String): TaskDto
+    suspend fun get(userUid: String, taskUid: String): TaskDto
 
-    suspend fun insertTask(userUid: String, task: TaskDto)
+    suspend fun insert(userUid: String, task: TaskDto)
 
-    suspend fun deleteTask(userUid: String, taskUid: String)
+    suspend fun delete(userUid: String, taskUid: String)
 
-    suspend fun updateTask(userUid: String, task: TaskDto)
+    suspend fun update(userUid: String, task: TaskDto)
 }

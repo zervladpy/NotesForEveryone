@@ -24,7 +24,7 @@ class UpdateTask
         try {
             emit(Response.Loading())
 
-            repository.apiUpdate(userUid, task)
+            repository.update(userUid, task)
 
             emit(Response.Success())
 

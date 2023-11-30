@@ -3,7 +3,6 @@ package com.example.uf1_proyecto_compose.domain.use_case.task
 import com.example.uf1_proyecto_compose.data.repository.TaskRepositoryImpl
 import com.example.uf1_proyecto_compose.domain.model.Task
 import com.example.uf1_proyecto_compose.domain.repository.AuthRepository
-import com.example.uf1_proyecto_compose.domain.repository.SubtaskRepository
 import com.example.uf1_proyecto_compose.domain.repository.TaskRepository
 import com.example.uf1_proyecto_compose.utils.Response
 import com.google.firebase.firestore.FirebaseFirestoreException
@@ -24,7 +23,6 @@ import javax.inject.Inject
 class InsertTask
 @Inject constructor(
     private val taskRepository: TaskRepository,
-    private val subtaskRepository: SubtaskRepository,
     private val authRepository: AuthRepository,
 ) {
 
@@ -35,11 +33,7 @@ class InsertTask
         try {
             emit(Response.Loading())
 
-            taskRepository.apiInsert(userUid, task)
-
-            task.subtasks.forEach {
-                subtaskRepository.insert(userUid, task.uid, it)
-            }
+            taskRepository.insert(userUid, task)
 
             emit(Response.Success())
 

@@ -7,14 +7,14 @@ interface TaskRepository {
 
     val tasks: MutableLiveData<List<Task>>
 
-    suspend fun apiGetAll(userUid: String): List<Task>
+    suspend fun get(userUid: String): List<Task>
 
-    suspend fun apiGetOne(userUid: String, taskUid: String): Task?
+    suspend fun get(userUid: String, taskUid: String): Task?
 
-    suspend fun apiInsert(userUid: String, task: Task)
+    suspend fun insert(userUid: String, task: Task)
 
-    suspend fun apiUpdate(userUid: String, task: Task)
+    suspend fun update(userUid: String, task: Task)
 
-    suspend fun apiDeleteById(userUid: String, taskUid: String)
+    suspend fun delete(userUid: String, taskUid: String)
 
 }

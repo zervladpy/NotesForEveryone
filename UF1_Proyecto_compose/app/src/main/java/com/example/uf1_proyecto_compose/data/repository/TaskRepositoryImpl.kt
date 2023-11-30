@@ -19,21 +19,19 @@ class TaskRepositoryImpl
         MutableLiveData<List<Task>>()
     }
 
-    override suspend fun apiGetAll(userUid: String): List<Task> {
-        val result = api.getAllTasks(userUid).map { it.toDomain() }
-        // insert to db
+    override suspend fun get(userUid: String): List<Task> {
+        val result = api.get(userUid).map { it.toDomain() }
+        // TODO(insert to db)
 
-        // set live data
         tasks.value = result
 
-        // return from db
-
+        // TODO(return from db)
 
         return result
     }
 
-    override suspend fun apiGetOne(userUid: String, taskUid: String): Task {
-        val result = api.getOne(userUid, taskUid).toDomain()
+    override suspend fun get(userUid: String, taskUid: String): Task {
+        val result = api.get(userUid, taskUid).toDomain()
 
         val updatedResult = tasks.value?.map {
             if (it.uid == result.uid) {
@@ -46,16 +44,16 @@ class TaskRepositoryImpl
         return result
     }
 
-    override suspend fun apiInsert(userUid: String, task: Task) {
+    override suspend fun insert(userUid: String, task: Task) {
 
         val updatedResult = tasks.value?.toMutableList()!!.apply { add(task) }.toList()
 
         tasks.value = updatedResult
 
-        api.insertTask(userUid, task = task.toDto())
+        api.insert(userUid, task = task.toDto())
     }
 
-    override suspend fun apiUpdate(userUid: String, task: Task) {
+    override suspend fun update(userUid: String, task: Task) {
 
         val updatedResult = tasks.value?.map {
             if (it.uid == task.uid) {
@@ -65,16 +63,16 @@ class TaskRepositoryImpl
 
         tasks.value = updatedResult
 
-        api.updateTask(userUid, task = task.toDto())
+        api.update(userUid, task = task.toDto())
     }
 
-    override suspend fun apiDeleteById(userUid: String, taskUid: String) {
+    override suspend fun delete(userUid: String, taskUid: String) {
 
         val updatedResult = tasks.value?.filter { it.uid == taskUid }
 
         tasks.value = updatedResult
 
-        api.deleteTask(userUid, taskUid)
+        api.delete(userUid, taskUid)
     }
 
 }

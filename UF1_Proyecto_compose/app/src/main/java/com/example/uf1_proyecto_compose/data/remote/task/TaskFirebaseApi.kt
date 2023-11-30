@@ -29,7 +29,7 @@ class TaskFirebaseApi
 
     }
 
-    override suspend fun getAllTasks(userUid: String): List<TaskDto> {
+    override suspend fun get(userUid: String): List<TaskDto> {
 
         val collection = api.collection(PARENT).document(userUid).collection(DOCUMENT)
         val documents = collection.get().await().documents
@@ -38,7 +38,7 @@ class TaskFirebaseApi
 
     }
 
-    override suspend fun getOne(userUid: String, taskUid: String): TaskDto {
+    override suspend fun get(userUid: String, taskUid: String): TaskDto {
 
         return api.collection(PARENT)
             .document(userUid)
@@ -48,7 +48,7 @@ class TaskFirebaseApi
 
     }
 
-    override suspend fun insertTask(userUid: String, task: TaskDto) {
+    override suspend fun insert(userUid: String, task: TaskDto) {
         api.collection(PARENT)
             .document(userUid)
             .collection(DOCUMENT)
@@ -56,12 +56,12 @@ class TaskFirebaseApi
             .set(task).await()
     }
 
-    override suspend fun deleteTask(userUid: String, taskUid: String) {
+    override suspend fun delete(userUid: String, taskUid: String) {
         api.collection(PARENT).document(userUid).collection(DOCUMENT).document(taskUid).delete()
             .await()
     }
 
-    override suspend fun updateTask(userUid: String, task: TaskDto) {
+    override suspend fun update(userUid: String, task: TaskDto) {
 
         /**
          * Replaces the task with another
