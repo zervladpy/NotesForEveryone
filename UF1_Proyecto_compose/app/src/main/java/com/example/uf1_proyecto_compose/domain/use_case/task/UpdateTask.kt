@@ -1,5 +1,6 @@
 package com.example.uf1_proyecto_compose.domain.use_case.task
 
+import android.util.Log
 import com.example.uf1_proyecto_compose.domain.model.Task
 import com.example.uf1_proyecto_compose.domain.repository.AuthRepository
 import com.example.uf1_proyecto_compose.domain.repository.TaskRepository
@@ -23,6 +24,8 @@ class UpdateTask
     ): Flow<Response<Unit>> = flow {
         try {
             emit(Response.Loading())
+
+            Log.d("Udaptaing task", task.toString())
 
             repository.apiUpdate(userUid, task)
 

@@ -1,13 +1,9 @@
 package com.example.uf1_proyecto_compose.utils.di
 
 import com.example.uf1_proyecto_compose.data.local.dao.AppDao
-import com.example.uf1_proyecto_compose.data.remote.subtask.SubtaskApi
-import com.example.uf1_proyecto_compose.data.remote.subtask.SubtaskFirebaseApi
 import com.example.uf1_proyecto_compose.data.remote.task.TaskApi
 import com.example.uf1_proyecto_compose.data.remote.task.TaskFirebaseApi
-import com.example.uf1_proyecto_compose.data.repository.SubtaskRepositoryImpl
 import com.example.uf1_proyecto_compose.data.repository.TaskRepositoryImpl
-import com.example.uf1_proyecto_compose.domain.repository.SubtaskRepository
 import com.example.uf1_proyecto_compose.domain.repository.TaskRepository
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
@@ -36,18 +32,6 @@ object NetworkModule {
         taskApi: TaskApi,
         appDao: AppDao,
     ): TaskRepository = TaskRepositoryImpl(taskApi, appDao)
-
-    @Singleton
-    @Provides
-    fun provideSubtaskApi(
-        firestore: FirebaseFirestore,
-    ): SubtaskApi = SubtaskFirebaseApi(firestore)
-
-    @Singleton
-    @Provides
-    fun provideSubtaskRepository(
-        subtaskApi: SubtaskApi,
-    ): SubtaskRepository = SubtaskRepositoryImpl(subtaskApi)
 
 
 }

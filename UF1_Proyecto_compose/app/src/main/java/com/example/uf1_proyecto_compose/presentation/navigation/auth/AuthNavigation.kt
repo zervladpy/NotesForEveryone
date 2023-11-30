@@ -34,7 +34,8 @@ fun AuthNavigation(
         }
 
         composable(
-            route = routes.LOGIN_SCREEN
+            route = routes.LOGIN_SCREEN,
+
         ) {
             LoginScreen(navController = navController)
         }
