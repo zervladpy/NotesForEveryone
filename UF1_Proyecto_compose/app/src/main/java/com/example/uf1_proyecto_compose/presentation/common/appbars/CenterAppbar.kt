@@ -2,7 +2,6 @@ package com.example.uf1_proyecto_compose.presentation.common.appbars
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Menu
@@ -52,7 +51,6 @@ fun CenteredAppbar(
             }
         },
         actions = actions,
-        windowInsets = WindowInsets(0, 0, 0 , 0)
     )
 
 }

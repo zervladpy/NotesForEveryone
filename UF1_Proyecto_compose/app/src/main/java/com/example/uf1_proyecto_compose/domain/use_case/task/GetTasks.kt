@@ -1,8 +1,10 @@
 package com.example.uf1_proyecto_compose.domain.use_case.task
 
-import com.example.uf1_proyecto_compose.data.remote.auth.AuthApi
+import androidx.lifecycle.MutableLiveData
 import com.example.uf1_proyecto_compose.data.repository.TaskRepositoryImpl
 import com.example.uf1_proyecto_compose.domain.model.Task
+import com.example.uf1_proyecto_compose.domain.repository.AuthRepository
+import com.example.uf1_proyecto_compose.domain.repository.TaskRepository
 import com.example.uf1_proyecto_compose.utils.Response
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -19,20 +21,22 @@ import javax.inject.Inject
  * */
 class GetTasks
 @Inject constructor(
-    private val repository: TaskRepositoryImpl,
-    private val authApi: AuthApi,
+    private val repository: TaskRepository,
+    private val authApi: AuthRepository,
 ) {
+
+    val liveTasks = repository.tasks
 
     operator fun invoke(
         userUid: String = authApi.user!!.uid,
-    ): Flow<Response<List<Task>>> = flow {
+    ): Flow<Response<MutableLiveData<List<Task>>>> = flow {
         try {
 
             emit(Response.Loading())
 
-            val result = repository.apiGetAll(userUid)
+            repository.apiGetAll(userUid)
 
-            emit(Response.Success(result))
+            emit(Response.Success(repository.tasks))
 
         } catch (e: HttpException) {
 

@@ -42,7 +42,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun TaskCreateScreen(
     navController: NavController,
-    viewModel: TaskCreateViewModel = hiltViewModel()
+    viewModel: TaskCreateViewModel = hiltViewModel(),
 ) {
 
     val context = LocalContext.current
@@ -93,7 +93,7 @@ fun TaskCreateScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun Appbar(
-    navigateBack: () -> Unit
+    navigateBack: () -> Unit,
 ) {
 
     TopAppBar(
@@ -117,7 +117,7 @@ private fun Appbar(
 @Composable
 private fun Content(
     modifier: Modifier,
-    viewModel: TaskCreateViewModel
+    viewModel: TaskCreateViewModel,
 ) {
 
     val state = viewModel.state
@@ -173,7 +173,6 @@ private fun Content(
                 onEdit = { titleSubtask = it },
                 trailingIcon = Icons.Rounded.Add,
                 trailingAction = { viewModel.addSubtask(titleSubtask) }
-
             )
         }
 

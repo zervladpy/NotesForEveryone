@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.core.view.WindowCompat
 import com.example.uf1_proyecto_compose.domain.model.toDomain
 import com.example.uf1_proyecto_compose.presentation.navigation.auth.AuthNavigation
 import com.example.uf1_proyecto_compose.presentation.navigation.main.MainNavigation
@@ -23,14 +22,9 @@ class MainActivity : ComponentActivity(), FirebaseAuth.AuthStateListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        WindowCompat.setDecorFitsSystemWindows(
-            window, true
-        )
-
         val authState = authViewModel.state
 
         setContent {
-
 
             UF1_Proyecto_composeTheme {
                 when (authState.value) {

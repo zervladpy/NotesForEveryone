@@ -1,25 +1,23 @@
 package com.example.uf1_proyecto_compose.presentation.screens.tasks
 
-import android.content.res.Configuration
+import android.util.Log
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
+import com.example.uf1_proyecto_compose.domain.model.Task
 import com.example.uf1_proyecto_compose.presentation.common.appbars.CenteredAppbar
 import com.example.uf1_proyecto_compose.presentation.common.buttons.N4EFabButton
 import com.example.uf1_proyecto_compose.presentation.common.cards.TaskPreviewCard
 import com.example.uf1_proyecto_compose.presentation.screens.tasks.viewmodel.TaskListViewModel
-import com.example.uf1_proyecto_compose.presentation.ui.theme.UF1_Proyecto_composeTheme
 
 @Composable
 fun TaskListScreen(
@@ -27,16 +25,30 @@ fun TaskListScreen(
     navController: NavController,
     openDrawer: () -> Unit = {},
 ) {
+
     Scaffold(
         topBar = { TaskListAppbar(openDrawer = openDrawer) },
         floatingActionButton = {
-            TaskListFabButton {
+            FabButton {
                 navController.navigate("tasks/create")
             }
         },
-        content = { TaskListContent(Modifier.padding(it), navController = navController) },
+        content = { Content(Modifier.padding(it), navController = navController) },
 
         )
+}
+
+@Composable
+private fun FabButton(
+    onClick: () -> Unit,
+) {
+
+    N4EFabButton(
+        icon = Icons.Rounded.Add,
+        title = "Create Task",
+        onClick = onClick
+    )
+
 }
 
 @Composable
@@ -49,52 +61,44 @@ private fun TaskListAppbar(
 }
 
 @Composable
-private fun TaskListContent(
+private fun Content(
     modifier: Modifier = Modifier,
     viewModel: TaskListViewModel = hiltViewModel(),
     navController: NavController,
 ) {
 
-    val state = viewModel.state.value
+    var tasks = emptyList<Task>()
 
-    LazyColumn(modifier) {
-        items(state.tasks) {
+    viewModel.state.value.tasks?.observeForever {
+        Log.d("tasks", it.toString())
+        tasks = it
+    }
+
+    TaskList(
+        tasks = tasks,
+        onClick = {
+            navController.navigate("tasks/${it}")
+        }
+    )
+}
+
+@Composable
+fun TaskList(
+    modifier: Modifier = Modifier,
+    tasks: List<Task> = emptyList(),
+    onClick: (String) -> Unit,
+) {
+
+    LazyColumn(
+        modifier = modifier,
+        contentPadding = PaddingValues(vertical = 10.dp)
+    ) {
+        items(tasks) {
             TaskPreviewCard(
                 task = it,
-                onClick = { task ->
-                    navController.navigate("tasks/${task.uid}")
-                }
+                onClick = { it -> onClick(it.uid) }
             )
         }
     }
-}
 
-@Composable
-private fun TaskListFabButton(
-    onClick: () -> Unit,
-) {
-
-    N4EFabButton(
-        icon = Icons.Rounded.Add,
-        title = "Create Task",
-        onClick = onClick
-    )
-
-}
-
-@Preview(name = "Light Mode", showBackground = true)
-@Preview(name = "Dark Mode", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-fun TaskListScreenPreview(
-    modifier: Modifier = Modifier,
-) {
-    UF1_Proyecto_composeTheme {
-        Surface(
-            color = MaterialTheme.colorScheme.background
-        ) {
-            TaskListScreen(
-                navController = rememberNavController()
-            )
-        }
-    }
 }

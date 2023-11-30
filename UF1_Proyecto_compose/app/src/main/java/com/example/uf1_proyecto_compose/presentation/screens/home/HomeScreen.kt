@@ -17,10 +17,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.uf1_proyecto_compose.presentation.common.appbars.CenteredAppbar
 import com.example.uf1_proyecto_compose.presentation.common.inputs.N4ETextField
+import com.example.uf1_proyecto_compose.presentation.screens.home.viewmodel.HomeViewModel
 import com.example.uf1_proyecto_compose.presentation.ui.theme.UF1_Proyecto_composeTheme
 
 
@@ -29,6 +31,7 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
     openDrawer: () -> Unit = {},
+    viewModel: HomeViewModel = hiltViewModel(),
 ) {
     Scaffold(
         topBar = { HomeAppbar(openDrawer = openDrawer) },

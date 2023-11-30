@@ -15,7 +15,7 @@ class TaskRepositoryImpl
     private val dao: AppDao,
 ) : TaskRepository {
 
-    val tasks: MutableLiveData<List<Task>> by lazy {
+    override val tasks: MutableLiveData<List<Task>> by lazy {
         MutableLiveData<List<Task>>()
     }
 
@@ -24,7 +24,6 @@ class TaskRepositoryImpl
         // insert to db
 
         // set live data
-
         tasks.value = result
 
         // return from db

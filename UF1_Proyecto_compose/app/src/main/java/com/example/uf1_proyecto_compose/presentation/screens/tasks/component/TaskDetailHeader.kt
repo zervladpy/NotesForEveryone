@@ -25,7 +25,8 @@ import com.example.uf1_proyecto_compose.domain.model.Task
 
 @Composable
 fun TaskDetailHeader(
-    task: Task
+    task: Task,
+
 ) {
     Surface(
         modifier = Modifier.fillMaxWidth(),
