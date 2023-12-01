@@ -1,40 +1,58 @@
 package com.example.uf1_proyecto_compose.presentation.screens.splash
 
-import android.content.res.Configuration
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.uf1_proyecto_compose.presentation.ui.theme.UF1_Proyecto_composeTheme
+import androidx.compose.ui.unit.dp
+import com.example.uf1_proyecto_compose.presentation.common.texts.AppTitle
+import com.example.uf1_proyecto_compose.presentation.screens.viewmodels.AuthViewModel
 
 @Composable
-fun SplashScreen() {
+fun SplashScreen(
+    authState: AuthViewModel,
+    navigateHome: () -> Unit,
+    navigateToLanding: () -> Unit,
+) {
+
+    val state = authState.state
+
+    LaunchedEffect(key1 = state.value.isLoading) {
+
+        if (!state.value.isLoading) {
+            if (state.value.isAuthenticated) {
+                navigateHome()
+            } else {
+                navigateToLanding()
+            }
+        }
+
+    }
+
     Scaffold(
-        content = { SplashContent(Modifier.padding(it)) }
+        content = {
+            Content(
+                modifier = Modifier.padding(it)
+            )
+        }
     )
 }
 
 @Composable
-fun SplashContent(
+private fun Content(
     modifier: Modifier = Modifier,
 ) {
-
-}
-
-@Preview(name = "Light Mode", showBackground = true)
-@Preview(name = "Dark Mode", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-fun LandingScreenPreview(
-    modifier: Modifier = Modifier,
-) {
-    UF1_Proyecto_composeTheme {
-        Surface(
-            color = MaterialTheme.colorScheme.background
-        ) {
-            SplashScreen()
-        }
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(20.dp),
+        verticalArrangement = Arrangement.Center
+    ) {
+        AppTitle()
     }
+
 }

@@ -23,7 +23,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.uf1_proyecto_compose.presentation.common.appbars.CenteredAppbar
 import com.example.uf1_proyecto_compose.presentation.common.inputs.N4ETextField
 import com.example.uf1_proyecto_compose.presentation.screens.home.viewmodel.HomeViewModel
-import com.example.uf1_proyecto_compose.presentation.ui.theme.UF1_Proyecto_composeTheme
+import com.example.uf1_proyecto_compose.presentation.ui.theme.Notes4EveryoneTheme
 
 
 @Composable
@@ -107,7 +107,7 @@ private fun HomeContent(
 private fun HomeScreenPreview(
     modifier: Modifier = Modifier,
 ) {
-    UF1_Proyecto_composeTheme {
+    Notes4EveryoneTheme {
         Surface(
             color = MaterialTheme.colorScheme.background
         ) {

@@ -24,7 +24,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.uf1_proyecto_compose.presentation.ui.theme.UF1_Proyecto_composeTheme as appTheme
+import com.example.uf1_proyecto_compose.presentation.ui.theme.Notes4EveryoneTheme as appTheme
 
 @Composable
 fun InputTextFieldWithLabel(

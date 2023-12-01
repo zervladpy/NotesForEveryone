@@ -27,7 +27,7 @@ class InsertTask
 ) {
 
     operator fun invoke(
-        userUid: String = authRepository.user!!.uid,
+        userUid: String = "authRepository.user!!.uid",
         task: Task,
     ): Flow<Response<Unit>> = flow {
         try {

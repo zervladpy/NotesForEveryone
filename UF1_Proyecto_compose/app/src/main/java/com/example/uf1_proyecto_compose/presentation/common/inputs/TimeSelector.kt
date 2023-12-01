@@ -14,7 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.uf1_proyecto_compose.presentation.ui.theme.UF1_Proyecto_composeTheme
+import com.example.uf1_proyecto_compose.presentation.ui.theme.Notes4EveryoneTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -37,7 +37,7 @@ fun TimeSelector(
 fun TimeSelectorPreview(
     modifier: Modifier = Modifier,
 ) {
-    UF1_Proyecto_composeTheme {
+    Notes4EveryoneTheme {
         Surface(
             color = MaterialTheme.colorScheme.background
         ) {

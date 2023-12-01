@@ -22,13 +22,13 @@ import javax.inject.Inject
 class GetTasks
 @Inject constructor(
     private val repository: TaskRepository,
-    private val authApi: AuthRepository,
+    private val authRepository: AuthRepository,
 ) {
 
     val liveTasks = repository.tasks
 
     operator fun invoke(
-        userUid: String = authApi.user!!.uid,
+        userUid: String = "authApi.user!!.uid",
     ): Flow<Response<MutableLiveData<List<Task>>>> = flow {
         try {
 
