@@ -1,4 +1,4 @@
-package com.example.uf1_proyecto_compose.presentation.screens.viewmodels.signup
+package com.example.uf1_proyecto_compose.presentation.screens.viewmodels.authentication.signup
 
 sealed class SignupEvent(val value: String? = null) {
     class EmailChanged(email: String) : SignupEvent(email)

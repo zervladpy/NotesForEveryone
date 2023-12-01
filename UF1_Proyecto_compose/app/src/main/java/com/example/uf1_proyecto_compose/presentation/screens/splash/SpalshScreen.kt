@@ -10,7 +10,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.uf1_proyecto_compose.presentation.common.texts.AppTitle
-import com.example.uf1_proyecto_compose.presentation.screens.viewmodels.AuthViewModel
+import com.example.uf1_proyecto_compose.presentation.screens.viewmodels.authentication.AuthViewModel
 
 @Composable
 fun SplashScreen(

@@ -15,7 +15,7 @@ import com.example.uf1_proyecto_compose.presentation.screens.auth.LoginScreen
 import com.example.uf1_proyecto_compose.presentation.screens.auth.SignUpScreen
 import com.example.uf1_proyecto_compose.presentation.screens.landing.LandingScreen
 import com.example.uf1_proyecto_compose.presentation.screens.splash.SplashScreen
-import com.example.uf1_proyecto_compose.presentation.screens.viewmodels.AuthViewModel
+import com.example.uf1_proyecto_compose.presentation.screens.viewmodels.authentication.AuthViewModel
 
 @Composable
 fun Router() {
@@ -110,7 +110,6 @@ fun Router() {
                         }
                     }
                 )
-
             }
 
             composable(
@@ -160,19 +159,28 @@ fun Router() {
                 route = Routes.Tasks.route
             ) {
 
-                val tasksViewModel: ViewModel
-
                 composable(
                     route = Routes.TaskList.route
-                ) {}
+                ) {
+                    /// go to tasks_list screen
+                }
 
                 composable(
                     route = Routes.TaskCreate.route
-                ) { }
+                ) {
+                    /// go to create_screen screen
+                }
 
                 composable(
                     route = Routes.TaskDetail.route
-                ) {}
+                ) {
+                    val taskUid: String = it.arguments?.getString("uid") ?: ""
+                    if (taskUid.isEmpty()) {
+                        /// Go to error screen
+                    } else {
+                        // Go to TaskDetail Screen
+                    }
+                }
             }
         }
     }

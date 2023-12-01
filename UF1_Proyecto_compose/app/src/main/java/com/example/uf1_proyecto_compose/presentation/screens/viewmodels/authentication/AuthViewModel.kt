@@ -1,4 +1,4 @@
-package com.example.uf1_proyecto_compose.presentation.screens.viewmodels
+package com.example.uf1_proyecto_compose.presentation.screens.viewmodels.authentication
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -7,10 +7,10 @@ import androidx.lifecycle.viewModelScope
 import com.example.uf1_proyecto_compose.domain.use_case.auth.GetAuthState
 import com.example.uf1_proyecto_compose.domain.use_case.auth.LoginWithEmailAndPassword
 import com.example.uf1_proyecto_compose.domain.use_case.auth.RegisterWithEmailAndPassword
-import com.example.uf1_proyecto_compose.presentation.screens.auth.login.LoginEvent
-import com.example.uf1_proyecto_compose.presentation.screens.auth.login.LoginState
-import com.example.uf1_proyecto_compose.presentation.screens.viewmodels.signup.SignupEvent
-import com.example.uf1_proyecto_compose.presentation.screens.viewmodels.signup.SignupState
+import com.example.uf1_proyecto_compose.presentation.screens.viewmodels.authentication.login.LoginEvent
+import com.example.uf1_proyecto_compose.presentation.screens.viewmodels.authentication.login.LoginState
+import com.example.uf1_proyecto_compose.presentation.screens.viewmodels.authentication.signup.SignupEvent
+import com.example.uf1_proyecto_compose.presentation.screens.viewmodels.authentication.signup.SignupState
 import com.example.uf1_proyecto_compose.utils.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn

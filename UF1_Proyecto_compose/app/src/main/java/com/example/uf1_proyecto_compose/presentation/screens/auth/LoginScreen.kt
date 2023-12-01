@@ -32,9 +32,9 @@ import com.example.uf1_proyecto_compose.presentation.common.buttons.N4EButton
 import com.example.uf1_proyecto_compose.presentation.common.buttons.N4ETextButton
 import com.example.uf1_proyecto_compose.presentation.common.inputs.N4ETextField
 import com.example.uf1_proyecto_compose.presentation.common.texts.AppTitle
-import com.example.uf1_proyecto_compose.presentation.screens.auth.login.LoginEvent
-import com.example.uf1_proyecto_compose.presentation.screens.auth.login.LoginState
-import com.example.uf1_proyecto_compose.presentation.screens.viewmodels.AuthViewModel
+import com.example.uf1_proyecto_compose.presentation.screens.viewmodels.authentication.AuthViewModel
+import com.example.uf1_proyecto_compose.presentation.screens.viewmodels.authentication.login.LoginEvent
+import com.example.uf1_proyecto_compose.presentation.screens.viewmodels.authentication.login.LoginState
 
 @Composable
 fun LoginScreen(

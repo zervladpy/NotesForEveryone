@@ -1,4 +1,4 @@
-package com.example.uf1_proyecto_compose.presentation.screens.auth.login
+package com.example.uf1_proyecto_compose.presentation.screens.viewmodels.authentication.login
 
 sealed class LoginEvent(val value: String? = null) {
 

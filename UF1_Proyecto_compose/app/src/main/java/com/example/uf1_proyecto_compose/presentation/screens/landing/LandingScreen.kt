@@ -19,7 +19,7 @@ import com.example.uf1_proyecto_compose.presentation.common.buttons.N4EButton
 import com.example.uf1_proyecto_compose.presentation.common.buttons.N4EOutlinedButton
 import com.example.uf1_proyecto_compose.presentation.common.buttons.N4ETextButton
 import com.example.uf1_proyecto_compose.presentation.common.texts.AppTitle
-import com.example.uf1_proyecto_compose.presentation.screens.viewmodels.AuthViewModel
+import com.example.uf1_proyecto_compose.presentation.screens.viewmodels.authentication.AuthViewModel
 
 
 @Composable

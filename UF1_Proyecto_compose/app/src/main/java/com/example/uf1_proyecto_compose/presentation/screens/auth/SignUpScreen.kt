@@ -32,9 +32,9 @@ import com.example.uf1_proyecto_compose.presentation.common.buttons.N4EButton
 import com.example.uf1_proyecto_compose.presentation.common.buttons.N4ETextButton
 import com.example.uf1_proyecto_compose.presentation.common.inputs.N4ETextField
 import com.example.uf1_proyecto_compose.presentation.common.texts.AppTitle
-import com.example.uf1_proyecto_compose.presentation.screens.viewmodels.AuthViewModel
-import com.example.uf1_proyecto_compose.presentation.screens.viewmodels.signup.SignupEvent
-import com.example.uf1_proyecto_compose.presentation.screens.viewmodels.signup.SignupState
+import com.example.uf1_proyecto_compose.presentation.screens.viewmodels.authentication.AuthViewModel
+import com.example.uf1_proyecto_compose.presentation.screens.viewmodels.authentication.signup.SignupEvent
+import com.example.uf1_proyecto_compose.presentation.screens.viewmodels.authentication.signup.SignupState
 
 @Composable
 fun SignUpScreen(

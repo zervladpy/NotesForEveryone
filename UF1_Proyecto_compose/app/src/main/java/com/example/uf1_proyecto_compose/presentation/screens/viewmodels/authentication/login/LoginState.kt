@@ -1,12 +1,10 @@
-package com.example.uf1_proyecto_compose.presentation.screens.viewmodels.signup
+package com.example.uf1_proyecto_compose.presentation.screens.viewmodels.authentication.login
 
-data class SignupState(
+data class LoginState(
     val isLoading: Boolean = false,
     val email: String = "",
     val emailError: String = "",
     val password: String = "",
     val passwordError: String = "",
-    val repeatPassword: String = "",
-    val repeatPasswordError: String = "",
     val error: String = "",
 )
