@@ -12,7 +12,7 @@ import javax.inject.Inject
 class LoginAnonymously
 @Inject constructor(
     private val repository: AuthRepository,
-    private val getUser: GetCurrentUserUseCase
+    private val getUser: GetCurrentUserUseCase,
 ) {
 
     operator fun invoke(
@@ -21,9 +21,6 @@ class LoginAnonymously
         try {
             emit(Response.Loading())
 
-            repository.loginAnonymously()
-
-            getUser()?.let { repository.addUserToLocal(it) }
 
             emit(Response.Success())
         } catch (e: FirebaseAuthException) {

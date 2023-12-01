@@ -1,5 +1,6 @@
 package com.example.uf1_proyecto_compose.domain.use_case.task
 
+import android.util.Log
 import com.example.uf1_proyecto_compose.domain.model.Task
 import com.example.uf1_proyecto_compose.domain.repository.AuthRepository
 import com.example.uf1_proyecto_compose.domain.repository.TaskRepository
@@ -18,13 +19,15 @@ class UpdateTask
 ) {
 
     operator fun invoke(
-        userUid: String = authRepository.user!!.uid,
+        userUid: String = "authRepository.user!!.uid",
         task: Task,
     ): Flow<Response<Unit>> = flow {
         try {
             emit(Response.Loading())
 
-            repository.update(userUid, task)
+            Log.d("Udaptaing task", task.toString())
+
+            repository.apiUpdate(userUid, task)
 
             emit(Response.Success())
 

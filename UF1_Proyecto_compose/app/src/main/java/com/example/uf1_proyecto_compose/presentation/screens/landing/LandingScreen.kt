@@ -11,30 +11,51 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.example.uf1_proyecto_compose.presentation.common.buttons.N4EButton
 import com.example.uf1_proyecto_compose.presentation.common.buttons.N4EOutlinedButton
 import com.example.uf1_proyecto_compose.presentation.common.buttons.N4ETextButton
 import com.example.uf1_proyecto_compose.presentation.common.texts.AppTitle
-import com.example.uf1_proyecto_compose.presentation.navigation.auth.AuthNavRoutes
+import com.example.uf1_proyecto_compose.presentation.screens.viewmodels.authentication.AuthViewModel
 
 
 @Composable
 fun LandingScreen(
-    navController: NavController,
+    viewModel: AuthViewModel,
+    navigateToLogin: () -> Unit = {},
+    navigateToRegister: () -> Unit = {},
+    navigateToHome: () -> Unit = {},
 ) {
+
+    val state = viewModel.state
+
+    // is authentication state is changed navigate to home screen
+    LaunchedEffect(key1 = state.value.isAuthenticated) {
+        if (state.value.isAuthenticated) {
+            navigateToHome()
+        }
+    }
+
     Scaffold(
-        content = { LandingContent(Modifier.padding(it), navController) }
+        content = {
+            Content(
+                modifier = Modifier.padding(it),
+                navigateToRegister = navigateToRegister,
+                navigateToLogin = navigateToLogin,
+            )
+        }
     )
+
 }
 
 @Composable
-private fun LandingContent(
+private fun Content(
     modifier: Modifier = Modifier,
-    navController: NavController,
+    navigateToLogin: () -> Unit = {},
+    navigateToRegister: () -> Unit = {},
 ) {
 
     Column(
@@ -56,9 +77,7 @@ private fun LandingContent(
                 .fillMaxWidth()
                 .height(50.dp),
             text = "Sign Up",
-            onClick = {
-                navController.navigate(AuthNavRoutes.REGISTER_SCREEN)
-            }
+            onClick = navigateToRegister
         )
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -68,9 +87,7 @@ private fun LandingContent(
                 .fillMaxWidth()
                 .height(50.dp),
             text = "Log in",
-            onClick = {
-                navController.navigate(AuthNavRoutes.LOGIN_SCREEN)
-            }
+            onClick = navigateToLogin
         )
 
         Spacer(modifier = Modifier.height(20.dp))

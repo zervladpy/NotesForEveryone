@@ -1,5 +1,6 @@
 package com.example.uf1_proyecto_compose.presentation.screens.tasks
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -15,9 +16,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.DateRange
+import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material.icons.rounded.Done
+import androidx.compose.material.icons.rounded.Edit
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.InputChip
@@ -28,16 +34,25 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.uf1_proyecto_compose.domain.model.Subtask
+import com.example.uf1_proyecto_compose.presentation.common.buttons.N4EFabButton
 import com.example.uf1_proyecto_compose.presentation.common.inputs.N4ETextField
 import com.example.uf1_proyecto_compose.presentation.screens.tasks.viewmodel.TaskDetailState
 import com.example.uf1_proyecto_compose.presentation.screens.tasks.viewmodel.TaskDetailViewModel
+import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.TextStyle
 import java.util.Locale
@@ -50,9 +65,19 @@ fun TaskDetailScreen(
 ) {
 
     val state = viewModel.state.value
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+
+    var isEditing by remember { mutableStateOf(false) }
 
     fun popBack() {
         navController.navigate("tasks")
+    }
+
+    fun notify(message: String) {
+        scope.launch {
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        }
     }
 
     Scaffold(
@@ -64,9 +89,36 @@ fun TaskDetailScreen(
         content = {
             Content(
                 modifier = Modifier.padding(it),
-                state = state
+                state = state,
+                viewModel = viewModel,
+                isEditing = isEditing
             )
-        }
+        },
+        bottomBar = {
+            BottomAppbar()
+        },
+        floatingActionButton = {
+            FabButton(
+                icon = if (isEditing) {
+                    Icons.Rounded.Done
+                } else Icons.Rounded.Edit,
+                onClick = {
+
+                    isEditing = if (isEditing) {
+                        viewModel.update(
+                            notify = { notify(it) }
+                        )
+
+                        false
+                    } else {
+                        viewModel.reset()
+                        true
+                    }
+
+                }
+            )
+        },
+        floatingActionButtonPosition = FabPosition.EndOverlay
     )
 }
 
@@ -98,9 +150,39 @@ private fun TopAppbar(
 }
 
 @Composable
+private fun BottomAppbar(
+
+) {
+    BottomAppBar {
+        IconButton(
+            onClick = {
+                // delete
+            }
+        ) {
+            Icon(imageVector = Icons.Rounded.Delete, contentDescription = "Delete task")
+        }
+    }
+}
+
+@Composable
+private fun FabButton(
+    icon: ImageVector,
+    onClick: () -> Unit = {},
+) {
+
+    N4EFabButton(
+        icon = icon,
+        onClick = onClick
+    )
+
+}
+
+@Composable
 private fun Content(
     modifier: Modifier,
+    viewModel: TaskDetailViewModel,
     state: TaskDetailState,
+    isEditing: Boolean,
 ) {
 
     val labelStyle = MaterialTheme.typography.titleSmall.copy(
@@ -121,7 +203,11 @@ private fun Content(
                 Text(text = label, style = labelStyle)
                 N4ETextField(
                     value = state.task?.title ?: "",
-                    placeholder = label
+                    placeholder = label,
+                    onEdit = {
+                        viewModel.setTitle(it)
+                    },
+                    isEditable = isEditing
                 )
             }
 
@@ -168,7 +254,11 @@ private fun Content(
                 Text(text = label, style = labelStyle)
                 N4ETextField(
                     value = state.task?.description ?: "",
-                    placeholder = label
+                    placeholder = label,
+                    onEdit = {
+                        viewModel.setDescription(it)
+                    },
+                    isEditable = isEditing,
                 )
             }
 
@@ -191,13 +281,15 @@ private fun Content(
                 val label: String = "Subtasks"
                 Text(text = label, style = labelStyle)
 
-                N4ETextField(
-                    placeholder = "Add subtask",
-                    value = "",
-                    onEdit = {},
-                    trailingAction = {},
-                    trailingIcon = Icons.Rounded.Add
-                )
+                if (isEditing) {
+                    N4ETextField(
+                        placeholder = "Add subtask",
+                        value = "",
+                        onEdit = {},
+                        trailingAction = {},
+                        trailingIcon = Icons.Rounded.Add
+                    )
+                }
 
                 ListSubtasks(subtasks = state.task?.subtasks ?: emptyList())
 

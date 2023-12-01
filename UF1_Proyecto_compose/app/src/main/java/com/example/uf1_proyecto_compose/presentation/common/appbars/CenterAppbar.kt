@@ -19,7 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.uf1_proyecto_compose.presentation.ui.theme.UF1_Proyecto_composeTheme
+import com.example.uf1_proyecto_compose.presentation.ui.theme.Notes4EveryoneTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -61,7 +61,7 @@ fun CenteredAppbar(
 fun CenterAppbarPreview(
     modifier: Modifier = Modifier,
 ) {
-    UF1_Proyecto_composeTheme {
+    Notes4EveryoneTheme {
         Surface(
             modifier.fillMaxWidth(),
             color = MaterialTheme.colorScheme.background
@@ -79,7 +79,7 @@ fun CenterAppbarPreview(
 fun CenterAppbarPreviewWithActions(
     modifier: Modifier = Modifier,
 ) {
-    UF1_Proyecto_composeTheme {
+    Notes4EveryoneTheme {
         Surface(
             modifier.fillMaxWidth(),
             color = MaterialTheme.colorScheme.background

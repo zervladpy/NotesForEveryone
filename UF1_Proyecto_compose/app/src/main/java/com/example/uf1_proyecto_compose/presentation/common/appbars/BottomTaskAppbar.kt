@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.uf1_proyecto_compose.presentation.common.buttons.N4EFabButton
-import com.example.uf1_proyecto_compose.presentation.ui.theme.UF1_Proyecto_composeTheme
+import com.example.uf1_proyecto_compose.presentation.ui.theme.Notes4EveryoneTheme
 
 @Composable
 fun BottomTaskAppbar(
@@ -45,7 +45,7 @@ fun BottomTaskAppbar(
 fun BottomTaskAppbarPreview(
     modifier: Modifier = Modifier
 ) {
-    UF1_Proyecto_composeTheme {
+    Notes4EveryoneTheme {
         Surface(
             modifier.fillMaxWidth(),
             color = MaterialTheme.colorScheme.background
@@ -66,7 +66,7 @@ fun BottomTaskAppbarPreview(
 fun BottomTaskAppbarPreviewWithActions(
     modifier: Modifier = Modifier
 ) {
-    UF1_Proyecto_composeTheme {
+    Notes4EveryoneTheme {
         Surface(
             modifier.fillMaxWidth(),
             color = MaterialTheme.colorScheme.background

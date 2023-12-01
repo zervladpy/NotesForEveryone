@@ -6,9 +6,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.uf1_proyecto_compose.presentation.screens.auth.LoginScreen
-import com.example.uf1_proyecto_compose.presentation.screens.auth.SignUpScreen
-import com.example.uf1_proyecto_compose.presentation.screens.landing.LandingScreen
 
 @Composable
 fun AuthNavigation(
@@ -28,21 +25,17 @@ fun AuthNavigation(
         composable(
             route = routes.LANDING_SCREEN
         ) {
-            LandingScreen(
-                navController = navController
-            )
         }
 
         composable(
-            route = routes.LOGIN_SCREEN
-        ) {
-            LoginScreen(navController = navController)
+            route = routes.LOGIN_SCREEN,
+
+            ) {
         }
 
         composable(
             route = routes.REGISTER_SCREEN
         ) {
-            SignUpScreen(navController = navController)
         }
 
     }

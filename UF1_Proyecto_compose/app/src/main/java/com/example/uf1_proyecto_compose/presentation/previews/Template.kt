@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.uf1_proyecto_compose.presentation.ui.theme.UF1_Proyecto_composeTheme
+import com.example.uf1_proyecto_compose.presentation.ui.theme.Notes4EveryoneTheme
 
 @Preview(name = "Light Mode", showBackground = true)
 @Preview(name = "Dark Mode", showBackground = true, uiMode = UI_MODE_NIGHT_YES)
@@ -17,7 +17,7 @@ import com.example.uf1_proyecto_compose.presentation.ui.theme.UF1_Proyecto_compo
 fun TemplatePreview(
     modifier: Modifier = Modifier
 ) {
-    UF1_Proyecto_composeTheme {
+    Notes4EveryoneTheme {
         Surface(
             color = MaterialTheme.colorScheme.background
         ) {

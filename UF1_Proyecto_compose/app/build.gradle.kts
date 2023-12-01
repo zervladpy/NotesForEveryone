@@ -77,6 +77,8 @@ dependencies {
     implementation("androidx.room:room-runtime:2.6.0")
     implementation("androidx.compose.material3:material3:1.2.0-alpha11")
     implementation("com.google.android.material:material:1.10.0")
+    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
 
     kapt("androidx.room:room-compiler:2.6.0")
     implementation("androidx.room:room-ktx:2.6.0")

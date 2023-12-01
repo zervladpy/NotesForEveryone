@@ -20,6 +20,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,33 +28,48 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.example.uf1_proyecto_compose.presentation.common.buttons.N4EButton
 import com.example.uf1_proyecto_compose.presentation.common.buttons.N4ETextButton
 import com.example.uf1_proyecto_compose.presentation.common.inputs.N4ETextField
 import com.example.uf1_proyecto_compose.presentation.common.texts.AppTitle
-import com.example.uf1_proyecto_compose.presentation.screens.auth.viewmodel.LoginViewModel
+import com.example.uf1_proyecto_compose.presentation.screens.viewmodels.authentication.AuthViewModel
+import com.example.uf1_proyecto_compose.presentation.screens.viewmodels.authentication.login.LoginEvent
+import com.example.uf1_proyecto_compose.presentation.screens.viewmodels.authentication.login.LoginState
 
 @Composable
 fun LoginScreen(
     modifier: Modifier = Modifier,
-    navController: NavController,
+    viewModel: AuthViewModel,
+    navigateBack: () -> Unit,
+    navigateToSignup: () -> Unit,
+    navigateToHome: () -> Unit,
 ) {
+
+    LaunchedEffect(key1 = viewModel.state.value.isAuthenticated) {
+        if (viewModel.state.value.isAuthenticated) {
+            navigateToHome()
+        }
+    }
+
     Scaffold(
-        topBar = { LoginAppbar(navController) },
-        content = { LoginContent(modifier.padding(it), navController) }
+        topBar = { Appbar(navigateBack) },
+        content = {
+            Content(modifier.padding(it),
+                loginState = viewModel.loginState.value,
+                eventHandler = { event -> viewModel.handleLoginEvent(event) }
+            )
+        }
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun LoginAppbar(
-    navController: NavController,
+private fun Appbar(
+    navigateBack: () -> Unit,
 ) {
     TopAppBar(
         navigationIcon = {
-            IconButton(onClick = { navController.popBackStack() }) {
+            IconButton(onClick = navigateBack) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
                     contentDescription = "pop back"
@@ -65,25 +81,11 @@ private fun LoginAppbar(
 }
 
 @Composable
-private fun LoginContent(
+private fun Content(
     modifier: Modifier = Modifier,
-    navController: NavController,
-    viewModel: LoginViewModel = hiltViewModel(),
+    loginState: LoginState = LoginState(),
+    eventHandler: (LoginEvent) -> Unit,
 ) {
-
-    val state = viewModel.state.value
-
-    var email by remember { mutableStateOf("") }
-    fun onEmailChanged(value: String) {
-        email = value
-        viewModel.checkEmail(email)
-    }
-
-    var password by remember { mutableStateOf("") }
-    fun onPasswordChanged(value: String) {
-        password = value
-        viewModel.checkPassword(password)
-    }
 
     Column(
         modifier = modifier
@@ -104,11 +106,11 @@ private fun LoginContent(
                 bottom = 30.dp
             ),
             placeholder = "Email",
-            value = email,
-            onEdit = { onEmailChanged(it) },
+            value = loginState.email,
+            onEdit = { eventHandler(LoginEvent.EmailChanged(it)) },
             leadingIcon = Icons.Rounded.Email,
-            isError = state.emailError.isNotEmpty(),
-            errorMessage = state.emailError,
+            isError = loginState.emailError.isNotEmpty(),
+            errorMessage = loginState.emailError,
         )
 
         var isPasswordVisible by remember { mutableStateOf(true) }
@@ -118,11 +120,11 @@ private fun LoginContent(
                 bottom = 40.dp
             ),
             placeholder = "Password",
-            value = password,
-            onEdit = { onPasswordChanged(it) },
+            value = loginState.password,
+            onEdit = { eventHandler(LoginEvent.PasswordChanged(it)) },
             leadingIcon = Icons.Rounded.Lock,
-            isError = state.passwordError.isNotEmpty(),
-            errorMessage = state.passwordError,
+            isError = loginState.passwordError.isNotEmpty(),
+            errorMessage = loginState.passwordError,
             isPassword = isPasswordVisible,
             trailingIcon = Icons.Rounded.Info,
             trailingAction = {
@@ -135,12 +137,14 @@ private fun LoginContent(
                 .fillMaxWidth()
                 .height(50.dp),
             text = "Log in",
-            onClick = { viewModel.login(email, password) },
-            enabled = state.emailError.isEmpty()
-                    && state.passwordError.isEmpty()
-                    && !state.isLoading
-                    && email.isNotEmpty()
-                    && password.isNotEmpty()
+            onClick = {
+                eventHandler(LoginEvent.Submit)
+            },
+            enabled = loginState.emailError.isEmpty()
+                    && loginState.passwordError.isEmpty()
+                    && !loginState.isLoading
+                    && loginState.email.isNotEmpty()
+                    && loginState.password.isNotEmpty()
         )
 
 

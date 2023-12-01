@@ -20,6 +20,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,35 +28,57 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.example.uf1_proyecto_compose.presentation.common.buttons.N4EButton
 import com.example.uf1_proyecto_compose.presentation.common.buttons.N4ETextButton
 import com.example.uf1_proyecto_compose.presentation.common.inputs.N4ETextField
 import com.example.uf1_proyecto_compose.presentation.common.texts.AppTitle
-import com.example.uf1_proyecto_compose.presentation.screens.auth.viewmodel.SignUpViewModel
+import com.example.uf1_proyecto_compose.presentation.screens.viewmodels.authentication.AuthViewModel
+import com.example.uf1_proyecto_compose.presentation.screens.viewmodels.authentication.signup.SignupEvent
+import com.example.uf1_proyecto_compose.presentation.screens.viewmodels.authentication.signup.SignupState
 
 @Composable
 fun SignUpScreen(
-    modifier: Modifier = Modifier,
-    navController: NavController,
+    viewModel: AuthViewModel,
+    navigateBack: () -> Unit,
+    navigateToLogin: () -> Unit,
+    navigateToHome: () -> Unit,
 ) {
 
+    LaunchedEffect(
+        key1 = viewModel.state.value.isAuthenticated
+    ) {
+
+        if (viewModel.state.value.isAuthenticated) {
+            navigateToHome()
+        }
+
+    }
+
     Scaffold(
-        topBar = { SignupTopAppbar(navController = navController) },
-        content = { SignUpContent(modifier.padding(it), navController) }
+        topBar = {
+            Appbar(navigateBack)
+        },
+        content = {
+            Content(
+                modifier = Modifier.padding(it),
+                state = viewModel.signupState.value,
+                handleEvent = { event ->
+                    viewModel.handleRegisterEvent(event)
+                },
+            )
+        }
     )
 
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun SignupTopAppbar(
-    navController: NavController,
+private fun Appbar(
+    navigateBack: () -> Unit,
 ) {
     TopAppBar(
         navigationIcon = {
-            IconButton(onClick = { navController.popBackStack() }) {
+            IconButton(onClick = navigateBack) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
                     contentDescription = "pop back"
@@ -67,31 +90,12 @@ private fun SignupTopAppbar(
 }
 
 @Composable
-fun SignUpContent(
+private fun Content(
     modifier: Modifier = Modifier,
-    navController: NavController,
-    viewModel: SignUpViewModel = hiltViewModel(),
+    state: SignupState,
+    handleEvent: (SignupEvent) -> Unit,
 ) {
 
-    val state = viewModel.state.value
-
-    var email by remember { mutableStateOf("") }
-    fun onEmailChanged(value: String) {
-        email = value
-        viewModel.checkEmail(email)
-    }
-
-    var password by remember { mutableStateOf("") }
-    fun onPasswordChanged(value: String) {
-        password = value
-        viewModel.checkPassword(password)
-    }
-
-    var repeatPassword by remember { mutableStateOf("") }
-    fun onRepeatPasswordChanged(value: String) {
-        repeatPassword = value
-        viewModel.checkRepeatPassword(password, repeatPassword)
-    }
 
     Column(
         modifier = modifier
@@ -112,8 +116,8 @@ fun SignUpContent(
                 bottom = 30.dp
             ),
             placeholder = "Email",
-            value = email,
-            onEdit = { onEmailChanged(it) },
+            value = state.email,
+            onEdit = { SignupEvent.EmailChanged(it) },
             leadingIcon = Icons.Rounded.Email,
             isError = state.emailError.isNotEmpty(),
             errorMessage = state.emailError,
@@ -126,8 +130,8 @@ fun SignUpContent(
                 bottom = 30.dp
             ),
             placeholder = "Password",
-            value = password,
-            onEdit = { onPasswordChanged(it) },
+            value = state.password,
+            onEdit = { SignupEvent.PasswordChanged(it) },
             leadingIcon = Icons.Rounded.Lock,
             isError = state.passwordError.isNotEmpty(),
             errorMessage = state.passwordError,
@@ -145,8 +149,8 @@ fun SignUpContent(
                 bottom = 40.dp
             ),
             placeholder = "Repeat Password",
-            value = repeatPassword,
-            onEdit = { onRepeatPasswordChanged(it) },
+            value = state.repeatPassword,
+            onEdit = { SignupEvent.RepeatPasswordChanged(it) },
             leadingIcon = Icons.Rounded.Lock,
             isError = state.repeatPasswordError.isNotEmpty(),
             errorMessage = state.repeatPasswordError,
@@ -162,14 +166,14 @@ fun SignUpContent(
                 .fillMaxWidth()
                 .height(50.dp),
             text = "Log in",
-            onClick = { viewModel.register(email, password, repeatPassword) },
+            onClick = { SignupEvent.Submit },
             enabled = state.emailError.isEmpty()
                     && state.passwordError.isEmpty()
                     && state.repeatPasswordError.isEmpty()
                     && !state.isLoading
-                    && email.isNotEmpty()
-                    && password.isNotEmpty()
-                    && repeatPassword.isNotEmpty()
+                    && state.email.isNotEmpty()
+                    && state.password.isNotEmpty()
+                    && state.repeatPassword.isNotEmpty()
         )
 
         Spacer(modifier = Modifier.height(20.dp))
