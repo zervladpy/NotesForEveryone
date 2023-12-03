@@ -1,4 +1,4 @@
-package com.example.uf1_proyecto_compose.app_navigation.auth_router
+package com.example.uf1_proyecto_compose.presentation.navigation.auth_router
 
 sealed class AuthRoutes(val route: String) {
     object Landing : AuthRoutes("landing")

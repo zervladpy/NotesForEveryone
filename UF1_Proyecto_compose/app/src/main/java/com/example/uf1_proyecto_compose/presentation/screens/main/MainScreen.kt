@@ -20,10 +20,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.uf1_proyecto_compose.R
-import com.example.uf1_proyecto_compose.app_navigation.bottom_router.BottomRouter
-import com.example.uf1_proyecto_compose.app_navigation.bottom_router.BottomRoutes
 import com.example.uf1_proyecto_compose.presentation.common.bottom_navigation.BottomNavItem
 import com.example.uf1_proyecto_compose.presentation.common.bottom_navigation.N4EBottomNavigationBar
+import com.example.uf1_proyecto_compose.presentation.navigation.bottom_router.BottomRouter
+import com.example.uf1_proyecto_compose.presentation.navigation.bottom_router.BottomRoutes
 import com.example.uf1_proyecto_compose.presentation.ui.theme.Notes4EveryoneTheme
 import com.example.uf1_proyecto_compose.presentation.viewmodels.profile.ProfileEvent
 import com.example.uf1_proyecto_compose.presentation.viewmodels.profile.ProfileState

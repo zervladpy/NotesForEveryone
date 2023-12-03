@@ -1,4 +1,4 @@
-package com.example.uf1_proyecto_compose.app_navigation.router
+package com.example.uf1_proyecto_compose.presentation.navigation.router
 
 sealed class Routes(val route: String) {
     object Root : Routes("/")

@@ -1,4 +1,4 @@
-package com.example.uf1_proyecto_compose.app_navigation.router
+package com.example.uf1_proyecto_compose.presentation.navigation.router
 
 import android.util.Log
 import androidx.compose.foundation.layout.fillMaxSize

@@ -6,8 +6,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.uf1_proyecto_compose.app_navigation.auth_router.AuthRouter
 import com.example.uf1_proyecto_compose.presentation.common.texts.AppTitle
+import com.example.uf1_proyecto_compose.presentation.navigation.auth_router.AuthRouter
 import com.example.uf1_proyecto_compose.presentation.ui.theme.Notes4EveryoneTheme
 import com.example.uf1_proyecto_compose.presentation.viewmodels.authenitcation.auth.AuthEvent
 import com.example.uf1_proyecto_compose.presentation.viewmodels.authenitcation.auth.AuthState

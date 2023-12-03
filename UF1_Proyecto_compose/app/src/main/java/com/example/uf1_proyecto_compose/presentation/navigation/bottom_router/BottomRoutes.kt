@@ -1,4 +1,4 @@
-package com.example.uf1_proyecto_compose.app_navigation.bottom_router
+package com.example.uf1_proyecto_compose.presentation.navigation.bottom_router
 
 sealed class BottomRoutes(val route: String) {
 

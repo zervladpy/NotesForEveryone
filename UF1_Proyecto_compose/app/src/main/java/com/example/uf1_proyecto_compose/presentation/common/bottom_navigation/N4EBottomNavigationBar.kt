@@ -20,7 +20,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.uf1_proyecto_compose.R
-import com.example.uf1_proyecto_compose.app_navigation.bottom_router.BottomRoutes
+import com.example.uf1_proyecto_compose.presentation.navigation.bottom_router.BottomRoutes
 import com.example.uf1_proyecto_compose.presentation.ui.theme.Notes4EveryoneTheme
 
 @Composable

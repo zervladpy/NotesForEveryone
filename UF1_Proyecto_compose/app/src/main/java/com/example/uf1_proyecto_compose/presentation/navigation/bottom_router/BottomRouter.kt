@@ -1,4 +1,4 @@
-package com.example.uf1_proyecto_compose.app_navigation.bottom_router
+package com.example.uf1_proyecto_compose.presentation.navigation.bottom_router
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
