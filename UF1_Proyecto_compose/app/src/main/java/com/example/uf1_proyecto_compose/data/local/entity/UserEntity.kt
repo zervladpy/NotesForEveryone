@@ -11,7 +11,9 @@ data class UserEntity(
     @ColumnInfo(name = "id")
     val uid: String,
     @ColumnInfo(name = "display_name")
-    val displayName: String?
+    val displayName: String?,
+    @ColumnInfo(name = "email")
+    val email: String?,
 )
 
 fun UserEntity.toDomain(): User {

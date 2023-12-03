@@ -15,26 +15,23 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ExitToApp
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.DateRange
-import androidx.compose.material.icons.rounded.Done
-import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Search
-import androidx.compose.material.icons.rounded.Settings
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.uf1_proyecto_compose.R
 import com.example.uf1_proyecto_compose.domain.model.Task
 import com.example.uf1_proyecto_compose.presentation.common.buttons.N4EFabButton
 import com.example.uf1_proyecto_compose.presentation.common.cards.TaskPreviewCard
@@ -70,81 +67,29 @@ fun HomeScreen(
             )
         },
         floatingActionButton = {
-            FabButton(
-                navigateToCreateTask = navigateToCreateTask
-            )
-        },
-        bottomBar = {
-            BottomNavigation()
+            FabButton(navigateToCreateTask)
         }
     )
 }
 
-@Composable
-private fun BottomNavigation() {
-    NavigationBar {
-        NavigationBarItem(
-            selected = false,
-            onClick = { /*TODO*/ },
-            icon = {
-                Icon(
-                    imageVector = Icons.Rounded.Home,
-                    contentDescription = ""
-                )
-            },
-            label = {
-                Text(text = "Home")
-            }
-        )
-        NavigationBarItem(
-            selected = true,
-            onClick = { /*TODO*/ },
-            icon = {
-                Icon(
-                    imageVector = Icons.Rounded.Done,
-                    contentDescription = ""
-                )
-            },
-            label = {
-                Text(text = "History")
-            }
-        )
-        NavigationBarItem(
-            selected = false,
-            onClick = { /*TODO*/ },
-            icon = {
-                Icon(
-                    imageVector = Icons.Rounded.Settings,
-                    contentDescription = ""
-                )
-            },
-            label = {
-                Text(text = "Settings")
-            }
-        )
-    }
-}
 
 @Composable
 private fun FabButton(
     navigateToCreateTask: () -> Unit
 ) {
-
     N4EFabButton(icon = Icons.Rounded.Add, onClick = navigateToCreateTask)
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun Appbar(
     isLoading: Boolean = false,
-    toggleDrawer: () -> Unit = {},
     logout: () -> Unit = {}
 ) {
     Column {
-        CenterAlignedTopAppBar(
+        TopAppBar(
             title = {
-                Text(text = "Home")
+                Text(text = stringResource(id = R.string.home_screen_title))
             },
             actions = {
                 IconButton(
@@ -167,7 +112,10 @@ private fun Appbar(
 
         Column(
             modifier = Modifier
-                .padding(horizontal = 20.dp)
+                .padding(
+                    horizontal = 20.dp,
+                    vertical = 10.dp
+                )
                 .fillMaxWidth()
         ) {
             OutlinedCard {
@@ -194,7 +142,7 @@ private fun Appbar(
             N4ETextField(
                 value = "",
                 onEdit = {},
-                placeholder = "Search",
+                placeholder = stringResource(id = R.string.search_placeholder),
                 trailingIcon = Icons.Rounded.Search,
                 trailingAction = {}
             )
@@ -219,12 +167,17 @@ private fun Content(
     Column(
         modifier
             .fillMaxSize()
-            .padding(horizontal = 10.dp)
+            .padding(
+                horizontal = 20.dp,
+                vertical = 10.dp
+            )
     ) {
 
         LazyColumn {
             items(tasks) {
-                TaskPreviewCard(task = it, onClick = { task -> navigateToTask(task.uid) })
+                if (!it.done) {
+                    TaskPreviewCard(task = it, onClick = { task -> navigateToTask(task.uid) })
+                }
             }
         }
     }

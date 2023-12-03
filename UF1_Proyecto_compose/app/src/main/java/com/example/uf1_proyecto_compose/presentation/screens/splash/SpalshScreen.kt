@@ -1,6 +1,5 @@
 package com.example.uf1_proyecto_compose.presentation.screens.splash
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,7 +10,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.uf1_proyecto_compose.presentation.common.texts.AppTitle
-import com.example.uf1_proyecto_compose.presentation.viewmodels.authenitcation.AuthState
+import com.example.uf1_proyecto_compose.presentation.viewmodels.authenitcation.auth.AuthState
 import com.example.uf1_proyecto_compose.presentation.viewmodels.shared_tasks.SharedTasksState
 
 @Composable
@@ -31,7 +30,6 @@ fun SplashScreen(
                     navigateHome()
                 }
             } else {
-                Log.d("navigating to", "Auth")
                 navigateToLanding()
             }
         }

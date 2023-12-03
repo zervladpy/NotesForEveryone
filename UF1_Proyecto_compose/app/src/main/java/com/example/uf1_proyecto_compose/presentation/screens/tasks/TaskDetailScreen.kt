@@ -38,8 +38,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.uf1_proyecto_compose.R
 import com.example.uf1_proyecto_compose.domain.model.Subtask
 import com.example.uf1_proyecto_compose.presentation.common.buttons.N4EFabButton
 import com.example.uf1_proyecto_compose.presentation.common.inputs.N4ETextField
@@ -128,7 +130,7 @@ private fun Appbar(
             containerColor = Color.Transparent
         ),
         title = {
-            Text(text = "Task Detail")
+            Text(text = stringResource(id = R.string.detail_task_screen_title))
         }
     )
 
@@ -142,7 +144,10 @@ private fun BottomAppbar(
         IconButton(
             onClick = onDelete
         ) {
-            Icon(imageVector = Icons.Rounded.Delete, contentDescription = "Delete task")
+            Icon(
+                imageVector = Icons.Rounded.Delete,
+                contentDescription = "Delete task",
+            )
         }
     }
 }
@@ -183,7 +188,7 @@ private fun Content(
             )
     ) {
         Column {
-            val label: String = "Task Title"
+            val label: String = stringResource(id = R.string.task_title_label)
             Text(text = label, style = labelStyle)
             N4ETextField(
                 value = state.task.title,
@@ -202,7 +207,7 @@ private fun Content(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            val label: String = "Creation Date"
+            val label: String = stringResource(id = R.string.creation_date_label)
             Text(text = label, style = labelStyle)
             val date = state.task.creationDate
 
@@ -237,11 +242,11 @@ private fun Content(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            val label: String = "Due date"
+            val label: String = stringResource(id = R.string.due_to_date_label)
             Text(text = label, style = labelStyle)
             val date = state.task.creationDate
 
-            val dateString = "undefined"
+            val dateString = stringResource(id = R.string.undefined_label)
 
             InputChip(
                 selected = false,
@@ -261,7 +266,7 @@ private fun Content(
         Spacer(modifier = Modifier.height(15.dp))
 
         Column {
-            val label: String = "Task Description"
+            val label: String = stringResource(id = R.string.task_description_label)
             Text(text = label, style = labelStyle)
             N4ETextField(
                 value = state.task.description,
@@ -276,7 +281,7 @@ private fun Content(
         Spacer(modifier = Modifier.height(15.dp))
 
         Column {
-            val label: String = "Progress"
+            val label: String = stringResource(id = R.string.progress_label)
             Text(text = label, style = labelStyle)
 
             TaskProgressionIndicator(
@@ -291,12 +296,13 @@ private fun Content(
         Spacer(modifier = Modifier.height(15.dp))
 
         Column {
-            val label: String = "Subtasks"
+            val label: String = stringResource(id = R.string.task_subtask_label)
+            val placeholder: String = stringResource(id = R.string.task_add_subtask_placeholder)
             Text(text = label, style = labelStyle)
 
             if (state.isEditing) {
                 N4ETextField(
-                    placeholder = "Add subtask",
+                    placeholder = placeholder,
                     value = state.subtaskTitle,
                     onEdit = {
                         onEvent(DetailTaskEvent.TaskSubtaskTitleChanged(it))
@@ -305,11 +311,16 @@ private fun Content(
                         onEvent(DetailTaskEvent.AddSubtask())
                     },
                     trailingIcon = Icons.Rounded.Add,
-
-                    )
+                )
             }
 
-            ListSubtasks(subtasks = state.task.subtasks)
+            ListSubtasks(
+                subtasks = state.task.subtasks,
+                onChange = { uid, mark ->
+                    onEvent(DetailTaskEvent.SubtaskMark(value = uid, mark = mark))
+                },
+                enabled = state.isEditing
+            )
 
         }
 
@@ -339,13 +350,20 @@ fun TaskProgressionIndicator(
 @Composable
 fun ListSubtasks(
     subtasks: List<Subtask>,
+    onChange: (uid: String, mark: Boolean) -> Unit,
+    enabled: Boolean
 ) {
 
-    Column(
-    ) {
+    Column {
 
         for (subtask in subtasks) {
-            SubtaskDetailCard(subtask = subtask)
+            SubtaskDetailCard(
+                subtask = subtask,
+                onChange = {
+                    onChange(subtask.uid, it)
+                },
+                enabled = enabled
+            )
         }
 
     }
@@ -354,6 +372,8 @@ fun ListSubtasks(
 @Composable
 fun SubtaskDetailCard(
     subtask: Subtask,
+    onChange: (Boolean) -> Unit,
+    enabled: Boolean
 ) {
     Row(
         modifier = Modifier
@@ -376,7 +396,8 @@ fun SubtaskDetailCard(
 
         Checkbox(
             checked = subtask.done,
-            onCheckedChange = {},
+            onCheckedChange = onChange,
+            enabled = enabled
         )
 
     }

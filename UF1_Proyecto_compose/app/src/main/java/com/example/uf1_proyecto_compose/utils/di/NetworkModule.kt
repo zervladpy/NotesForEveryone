@@ -6,6 +6,7 @@ import com.example.uf1_proyecto_compose.data.remote.task.TaskFirebaseApi
 import com.example.uf1_proyecto_compose.data.repository.TaskRepositoryImpl
 import com.example.uf1_proyecto_compose.domain.repository.TaskRepository
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,6 +19,10 @@ object NetworkModule {
     @Singleton
     @Provides
     fun provideFirebaseInstance() = FirebaseFirestore.getInstance()
+
+    @Singleton
+    @Provides
+    fun provideFirebaseStorageInstance() = FirebaseStorage.getInstance()
 
     @Singleton
     @Provides

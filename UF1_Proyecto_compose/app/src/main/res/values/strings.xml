@@ -1,3 +1,55 @@
 <resources>
-    <string name="app_name">UF1_Proyecto_compose</string>
+    <string name="app_name">Notes4Everyone</string>
+    <!-- Screen titles -->
+    <string name="home_screen_title">Home</string>
+    <string name="history_screen_title">History</string>
+    <string name="settings_screen_title">Settings</string>
+    <string name="login_screen_title">Login</string>
+    <string name="signup_screen_title">Signup</string>
+    <string name="create_task_screen_title">Create Task</string>
+    <string name="detail_task_screen_title">Task Detail</string>
+    <!-- Bottom Navigation labels -->
+    <string name="bottom_navigation_home_label">Home</string>
+    <string name="bottom_navigation_history_label">History</string>
+    <string name="bottom_navigation_settings_label">Settings</string>
+    <!-- Auth Screen texts -->
+    <string name="sign_up_button_label">Sign Up</string>
+    <string name="login_button_label">Log In</string>
+    <string name="login_with_google_button_label">Sign In with Google</string>
+    <string name="login_with_github_button_label">Sign In with GitHub</string>
+    <string name="email_placeholder">Email</string>
+    <string name="password_placeholder">Password</string>
+    <string name="repeat_password_placeholder">Repeat Password</string>
+    <!-- Home Screen texts -->
+    <string name="search_placeholder">Search</string>
+    <!-- History Screen text -->
+
+    <!-- Settings Screen text -->
+    <string name="name_label">Name</string>
+    <string name="add_photo">Add Profile Picture</string>
+
+    <!-- Create Task Screen text -->
+    <string name="task_title_label">Task Title</string>
+    <string name="task_description_label">Task Description</string>
+    <string name="task_description_placeholder">Task Description</string>
+    <string name="task_subtask_label">Subtasks</string>
+    <string name="task_add_subtask_placeholder">Add Subtask</string>
+    <string name="create_task_fab_label">Create Task</string>
+
+    <!-- Task Details Screen text-->
+    <string name="progress_label">Progress</string>
+    <string name="creation_date_label">Created at</string>
+    <string name="due_to_date_label">Due to</string>
+    <string name="undefined_label">Undefined</string>
+
+    <!-- Task Preview Card text-->
+    <string name="created_at">Created at</string>
+
+    <!-- error texts -->
+    <string name="error_not_found">Oops.. 404</string>
+    <string name="required_field">* Required Field</string>
+    <string name="email_bad_format">* Email Badly Formatted</string>
+    <string name="password_to_short">* Password to Short</string>
+    <string name="passwords_dont_match">* Passwords don\'t match</string>
+
 </resources>

@@ -1,4 +1,4 @@
-package com.example.uf1_proyecto_compose.app_navigation
+package com.example.uf1_proyecto_compose.app_navigation.router
 
 import android.util.Log
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,17 +16,17 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import com.example.uf1_proyecto_compose.presentation.screens.auth.LoginScreen
-import com.example.uf1_proyecto_compose.presentation.screens.auth.SignUpScreen
+import com.example.uf1_proyecto_compose.presentation.screens.auth.AuthScreen
 import com.example.uf1_proyecto_compose.presentation.screens.error.ErrorScreen
-import com.example.uf1_proyecto_compose.presentation.screens.home.HomeScreen
-import com.example.uf1_proyecto_compose.presentation.screens.landing.LandingScreen
+import com.example.uf1_proyecto_compose.presentation.screens.main.MainScreen
 import com.example.uf1_proyecto_compose.presentation.screens.splash.SplashScreen
 import com.example.uf1_proyecto_compose.presentation.screens.tasks.TaskCreateScreen
 import com.example.uf1_proyecto_compose.presentation.screens.tasks.TaskDetailScreen
-import com.example.uf1_proyecto_compose.presentation.viewmodels.authenitcation.AuthViewModel
+import com.example.uf1_proyecto_compose.presentation.viewmodels.authenitcation.auth.AuthEvent
+import com.example.uf1_proyecto_compose.presentation.viewmodels.authenitcation.auth.AuthViewModel
 import com.example.uf1_proyecto_compose.presentation.viewmodels.create_task.CreateTaskViewModel
 import com.example.uf1_proyecto_compose.presentation.viewmodels.detail_task.DetailTaskViewModel
+import com.example.uf1_proyecto_compose.presentation.viewmodels.profile.ProfileViewModel
 import com.example.uf1_proyecto_compose.presentation.viewmodels.shared_tasks.SharedTasksViewModel
 
 @Composable
@@ -64,110 +64,31 @@ fun Router(
                         }
                     },
                     navigateToLanding = {
-                        navController.navigate(Routes.Auth.route)
+                        navController.navigate(Routes.Auth.route) {
+                            popUpTo(Routes.Root.route) {
+                                inclusive = true
+                            }
+                        }
                     }
                 )
             }
 
-            // user not authenticated
-            navigation(
-                route = Routes.Auth.route,
-                startDestination = Routes.Landing.route,
+            composable(
+                route = Routes.Auth.route
             ) {
 
-                composable(
-                    route = Routes.Landing.route
-                ) {
-                    val viewModel: AuthViewModel = it.sharedViewModel(navController)
+                val authViewModel: AuthViewModel = it.sharedViewModel(navController)
 
-                    LandingScreen(
-                        modifier = modifier
-                            .statusBarsPadding()
-                            .navigationBarsPadding(),
-                        viewModel = viewModel,
-                        navigateToLogin = {
-                            navController.navigate(
-                                Routes.Login.route
-                            )
-                        },
-                        navigateToRegister = {
-                            navController.navigate(
-                                Routes.Signup.route
-                            )
-                        },
-                        navigateToHome = {
-                            navController.navigate(
-                                Routes.Home.route
-                            ) {
-                                popUpTo(Routes.Auth.route) {
-                                    inclusive = true
-                                }
-                            }
-                        },
-                    )
-                }
-
-                composable(
-                    route = Routes.Login.route
-                ) {
-                    val viewModel: AuthViewModel = it.sharedViewModel(navController)
-
-                    LoginScreen(
-                        modifier = modifier
-                            .statusBarsPadding()
-                            .navigationBarsPadding(),
-                        loginState = viewModel.loginState.value,
-                        authState = viewModel.state.value,
-                        onEvent = { viewModel.handleLoginEvent(it) },
-                        navigateBack = {
-                            navController.navigate(Routes.Landing.route) {
-                                popUpTo(Routes.Auth.route) { inclusive = true }
-                            }
-                        },
-                        navigateToSignup = {
-                            navController.navigate(Routes.Signup.route)
-                        },
-                        navigateToHome = {
-                            navController.navigate(
-                                Routes.Home.route
-                            ) {
-                                popUpTo(Routes.Auth.route) {
-                                    inclusive = true
-                                }
-                            }
+                AuthScreen(
+                    modifier = Modifier,
+                    authState = authViewModel.state.value,
+                    onAuthEvent = authViewModel::onEvent,
+                    navigateToMain = {
+                        navController.navigate(Routes.Home.route) {
+                            popUpTo(Routes.Root.route)
                         }
-                    )
-                }
-
-                composable(
-                    route = Routes.Signup.route
-                ) {
-                    val viewModel: AuthViewModel = it.sharedViewModel(navController)
-
-                    SignUpScreen(
-                        modifier = modifier
-                            .statusBarsPadding()
-                            .navigationBarsPadding(),
-                        viewModel = viewModel,
-                        navigateBack = {
-                            navController.navigate(Routes.Landing.route) {
-                                popUpTo(Routes.Auth.route)
-                            }
-                        },
-                        navigateToLogin = {
-                            navController.navigate(Routes.Login.route)
-                        },
-                        navigateToHome = {
-                            navController.navigate(
-                                Routes.Home.route
-                            ) {
-                                popUpTo(Routes.Auth.route) {
-                                    inclusive = true
-                                }
-                            }
-                        }
-                    )
-                }
+                    }
+                )
             }
 
             // user authenticated
@@ -184,34 +105,40 @@ fun Router(
                         it.sharedViewModel(navController)
                     val authViewModel: AuthViewModel = it.sharedViewModel(navController)
 
+                    val profileViewModel: ProfileViewModel = it.sharedViewModel(navController)
+
                     val sharedState = sharedTasksViewModel.state
 
                     Log.d("Router", sharedTasksViewModel.state.value.tasks.toString())
 
-                    HomeScreen(
-                        modifier = modifier
+                    MainScreen(
+                        modifier = Modifier
+                            .navigationBarsPadding()
                             .statusBarsPadding(),
-                        state = sharedState.value,
-                        onEvent = sharedTasksViewModel::onEvent,
-                        navigateToTask = { uid -> navController.navigate(uid) },
-                        navigateToCreateTask = {
-                            navController.navigate(Routes.TaskCreate.route)
-                        },
-                        logout = {
-                            authViewModel.logout()
+                        sharedTasksState = sharedState.value,
+                        onSharedTaskEvent = sharedTasksViewModel::onEvent,
+                        onLogout = {
+                            authViewModel.onEvent(AuthEvent.LogOut())
                             navController.navigate(Routes.Root.route) {
                                 popUpTo(Routes.Root.route) {
                                     inclusive = true
                                 }
                             }
-                        }
+                        },
+                        navigateToTaskDetail = {
+                            navController.navigate(it)
+                        },
+                        navigateToCreateTask = {
+                            navController.navigate(Routes.TaskCreate.route)
+                        },
+                        profileState = profileViewModel.state.value,
+                        onProfileEvent = profileViewModel::onEvent
                     )
                 }
 
                 composable(
                     route = Routes.TaskDetail.route,
-
-                    ) {
+                ) {
                     val args = it.arguments?.getString("uid") ?: ""
                     val sharedTasksViewModel: SharedTasksViewModel =
                         it.sharedViewModel(navController)

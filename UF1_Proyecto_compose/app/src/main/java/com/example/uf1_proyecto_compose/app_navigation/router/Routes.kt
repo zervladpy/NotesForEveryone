@@ -1,4 +1,4 @@
-package com.example.uf1_proyecto_compose.app_navigation
+package com.example.uf1_proyecto_compose.app_navigation.router
 
 sealed class Routes(val route: String) {
     object Root : Routes("/")
@@ -8,8 +8,6 @@ sealed class Routes(val route: String) {
     object Login : Routes("login")
     object Signup : Routes("signup")
     object Home : Routes("home")
-    object Dashboard : Routes("dashboard")
-    object Tasks : Routes("tasks")
     object TaskList : Routes("task_list")
     object TaskCreate : Routes("create")
     object TaskDetail : Routes("{uid}")

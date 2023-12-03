@@ -7,6 +7,7 @@ import com.example.uf1_proyecto_compose.data.repository.AuthRepositoryImpl
 import com.example.uf1_proyecto_compose.domain.model.User
 import com.example.uf1_proyecto_compose.domain.repository.AuthRepository
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.storage.FirebaseStorage
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,8 +25,9 @@ object AuthenticationModule {
     @Provides
     @Singleton
     fun provideAuthApi(
-        firebaseAuth: FirebaseAuth
-    ): AuthApi = AuthFirebaseApi(firebaseAuth)
+        firebaseAuth: FirebaseAuth,
+        firebaseStorage: FirebaseStorage
+    ): AuthApi = AuthFirebaseApi(firebaseAuth, firebaseStorage)
 
     @Provides
     @Singleton

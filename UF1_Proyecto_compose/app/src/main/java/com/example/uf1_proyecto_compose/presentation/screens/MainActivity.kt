@@ -6,7 +6,7 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.ui.graphics.Color
-import com.example.uf1_proyecto_compose.app_navigation.Router
+import com.example.uf1_proyecto_compose.app_navigation.router.Router
 import com.example.uf1_proyecto_compose.presentation.ui.theme.Notes4EveryoneTheme
 import dagger.hilt.android.AndroidEntryPoint
 

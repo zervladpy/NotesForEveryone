@@ -5,7 +5,5 @@ sealed class LoginEvent(val value: String? = null) {
     class EmailChanged(val email: String) : LoginEvent(email)
 
     class PasswordChanged(val password: String) : LoginEvent(password)
-
-    object Submit : LoginEvent()
-
+    
 }

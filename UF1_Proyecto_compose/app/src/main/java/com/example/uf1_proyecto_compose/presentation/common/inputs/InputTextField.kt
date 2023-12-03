@@ -87,7 +87,7 @@ fun N4ETextField(
                 disabledIndicatorColor = Color.Transparent,
                 errorIndicatorColor = Color.Transparent,
 
-            ),
+                ),
             readOnly = !isEditable,
             maxLines = maxLines,
             leadingIcon = if (leadingIcon != null) {
@@ -119,18 +119,6 @@ fun N4ETextField(
                 {
                     Text(
                         text = placeholder,
-                        color = if (isError) {
-                            errorColor
-                        } else {
-                            defaultColor
-                        },
-                    )
-                }
-            } else null,
-            label = if (value.isNotEmpty() && label.isNotEmpty()) {
-                {
-                    Text(
-                        text = label,
                         color = if (isError) {
                             errorColor
                         } else {

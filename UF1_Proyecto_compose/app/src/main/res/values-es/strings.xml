@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Notes4Everyone</string>
+    <!-- Screen titles -->
+    <string name="home_screen_title">Inicio</string>
+    <string name="history_screen_title">Historial</string>
+    <string name="settings_screen_title">Ajustes</string>
+    <string name="login_screen_title">Inicio de Sesión</string>
+    <string name="signup_screen_title">Registro</string>
+    <string name="create_task_screen_title">Crear Tarea</string>
+    <string name="detail_task_screen_title">Detalles de Tarea</string>
+    <!-- Bottom Navigation labels -->
+    <string name="bottom_navigation_home_label">Inicio</string>
+    <string name="bottom_navigation_history_label">Historial</string>
+    <string name="bottom_navigation_settings_label">Ajustes</string>
+    <!-- Auth Screen texts -->
+    <string name="sign_up_button_label">Crear Cuenta</string>
+    <string name="login_button_label">Iniciar Sesión</string>
+    <string name="login_with_google_button_label">Iniciar Sesión con Google</string>
+    <string name="login_with_github_button_label">Iniciar Sesión con GitHub</string>
+    <string name="email_placeholder">Email</string>
+    <string name="password_placeholder">Contraseña</string>
+    <string name="repeat_password_placeholder">Repetir Contraseña</string>
+    <!-- Home Screen texts -->
+    <string name="search_placeholder">Buscar</string>
+    <!-- History Screen text -->
+
+    <!-- Settings Screen text -->
+    <string name="name_label">Nombre</string>
+    <string name="add_photo">Añadir foto de perfil</string>
+
+    <!-- Create Task Screen text -->
+    <string name="task_title_label">Título</string>
+    <string name="task_description_label">Descripcion</string>
+    <string name="task_description_placeholder">Descripcion</string>
+    <string name="task_subtask_label">Subtareas</string>
+    <string name="task_add_subtask_placeholder">Añadir Subtarea</string>
+    <string name="create_task_fab_label">Crear Tarea</string>
+
+    <!-- Task Details Screen text-->
+    <string name="progress_label">Progreso</string>
+    <string name="creation_date_label">Creado el</string>
+    <string name="due_to_date_label">Hasta</string>
+    <string name="undefined_label">No definido</string>
+
+    <!-- Task Preview Card text-->
+    <string name="created_at">Creado el</string>
+
+    <!-- error texts -->
+    <string name="error_not_found">Oops.. 404</string>
+    <string name="required_field">* Campo obligatorio</string>
+    <string name="email_bad_format">* Email mal formateado</string>
+    <string name="password_to_short">* La contraseña es demaisado corta</string>
+    <string name="passwords_dont_match">* Las Contraseñas no Coninciden</string>
+
+</resources>

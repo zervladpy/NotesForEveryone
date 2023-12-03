@@ -20,8 +20,10 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.uf1_proyecto_compose.R
 import com.example.uf1_proyecto_compose.domain.model.Subtask
 import com.example.uf1_proyecto_compose.presentation.common.buttons.N4EFabButton
 import com.example.uf1_proyecto_compose.presentation.common.inputs.N4ETextField
@@ -77,7 +79,7 @@ private fun FabButton(
 ) {
     N4EFabButton(
         icon = Icons.Rounded.Add,
-        title = "Create Task",
+        title = stringResource(id = R.string.create_task_screen_title),
         onClick = onClick
     )
 }
@@ -102,7 +104,7 @@ private fun Appbar(
             containerColor = Color.Transparent
         ),
         title = {
-            Text(text = "New Task")
+            Text(text = stringResource(id = R.string.create_task_screen_title))
         }
     )
 }
@@ -120,7 +122,7 @@ private fun Content(
         modifier = modifier.verticalScroll(scrollState)
     ) {
 
-        val titleLabel = "Task Title"
+        val titleLabel = stringResource(id = R.string.task_title_label)
         N4ETextField(
             label = titleLabel,
             placeholder = titleLabel,
@@ -130,7 +132,7 @@ private fun Content(
             errorMessage = state.taskTitleError
         )
 
-        val descriptionLabel = "Task Description"
+        val descriptionLabel = stringResource(id = R.string.task_description_label)
         N4ETextField(
             label = descriptionLabel,
             placeholder = descriptionLabel,
@@ -138,8 +140,8 @@ private fun Content(
             onEdit = { eventHandler(CreateTaskEvent.TaskDescriptionChanged(it)) }
         )
 
-        val subtaskLabel = "Subtasks"
-        val subtaskPlaceholder = "Add Subtask"
+        val subtaskLabel = stringResource(id = R.string.task_subtask_label)
+        val subtaskPlaceholder = stringResource(id = R.string.task_add_subtask_placeholder)
         N4ETextField(
             label = subtaskLabel,
             placeholder = subtaskPlaceholder,

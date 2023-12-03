@@ -1,5 +1,6 @@
 package com.example.uf1_proyecto_compose.data.repository
 
+import android.net.Uri
 import com.example.uf1_proyecto_compose.data.local.dao.AppDao
 import com.example.uf1_proyecto_compose.data.remote.auth.AuthApi
 import com.example.uf1_proyecto_compose.data.remote.dto.toDomain
@@ -52,4 +53,10 @@ class AuthRepositoryImpl
         api.logout()
     }
 
+    /**
+     *
+     * */
+    override suspend fun updateProfile(displayName: String, photoUri: Uri) {
+        api.updateProfile(displayName, photoUri)
+    }
 }

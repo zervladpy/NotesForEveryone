@@ -18,42 +18,33 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.uf1_proyecto_compose.R
 import com.example.uf1_proyecto_compose.presentation.common.buttons.N4EButton
 import com.example.uf1_proyecto_compose.presentation.common.buttons.N4ETextButton
 import com.example.uf1_proyecto_compose.presentation.common.inputs.N4ETextField
-import com.example.uf1_proyecto_compose.presentation.common.texts.AppTitle
-import com.example.uf1_proyecto_compose.presentation.viewmodels.authenitcation.AuthViewModel
-import com.example.uf1_proyecto_compose.presentation.viewmodels.authenitcation.signup.SignupEvent
+import com.example.uf1_proyecto_compose.presentation.viewmodels.authenitcation.auth.AuthEvent
+import com.example.uf1_proyecto_compose.presentation.viewmodels.authenitcation.signup.SignUpEvent
 import com.example.uf1_proyecto_compose.presentation.viewmodels.authenitcation.signup.SignupState
 
 @Composable
 fun SignUpScreen(
     modifier: Modifier = Modifier,
-    viewModel: AuthViewModel,
+    signupState: SignupState,
+    onEvent: (SignUpEvent) -> Unit,
+    onAuthEvent: (AuthEvent) -> Unit,
     navigateBack: () -> Unit,
-    navigateToLogin: () -> Unit,
-    navigateToHome: () -> Unit,
 ) {
-
-    LaunchedEffect(
-        key1 = viewModel.state.value.isAuthenticated
-    ) {
-
-        if (viewModel.state.value.isAuthenticated) {
-            navigateToHome()
-        }
-
-    }
 
     Scaffold(
         topBar = {
@@ -62,10 +53,9 @@ fun SignUpScreen(
         content = {
             Content(
                 modifier = modifier.padding(it),
-                state = viewModel.signupState.value,
-                handleEvent = { event ->
-                    viewModel.handleRegisterEvent(event)
-                },
+                state = signupState,
+                onEvent = onEvent,
+                onAuthEvent = onAuthEvent
             )
         }
     )
@@ -86,7 +76,13 @@ private fun Appbar(
                 )
             }
         },
-        title = {}
+        title = {
+            Text(
+                text = stringResource(
+                    id = R.string.signup_screen_title
+                )
+            )
+        }
     )
 }
 
@@ -94,7 +90,8 @@ private fun Appbar(
 private fun Content(
     modifier: Modifier = Modifier,
     state: SignupState,
-    handleEvent: (SignupEvent) -> Unit,
+    onEvent: (SignUpEvent) -> Unit,
+    onAuthEvent: (AuthEvent) -> Unit
 ) {
 
 
@@ -106,19 +103,15 @@ private fun Content(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        Spacer(modifier = Modifier.weight(1f))
-
-        AppTitle()
-
-        Spacer(modifier = Modifier.weight(1f))
-
         N4ETextField(
             modifier = Modifier.padding(
                 bottom = 30.dp
             ),
-            placeholder = "Email",
+            placeholder = stringResource(id = R.string.email_placeholder),
             value = state.email,
-            onEdit = { SignupEvent.EmailChanged(it) },
+            onEdit = {
+                onEvent(SignUpEvent.EmailChanged(it))
+            },
             leadingIcon = Icons.Rounded.Email,
             isError = state.emailError.isNotEmpty(),
             errorMessage = state.emailError,
@@ -130,9 +123,9 @@ private fun Content(
             modifier = Modifier.padding(
                 bottom = 30.dp
             ),
-            placeholder = "Password",
+            placeholder = stringResource(id = R.string.password_placeholder),
             value = state.password,
-            onEdit = { SignupEvent.PasswordChanged(it) },
+            onEdit = { onEvent(SignUpEvent.PasswordChanged(it)) },
             leadingIcon = Icons.Rounded.Lock,
             isError = state.passwordError.isNotEmpty(),
             errorMessage = state.passwordError,
@@ -149,9 +142,9 @@ private fun Content(
             modifier = Modifier.padding(
                 bottom = 40.dp
             ),
-            placeholder = "Repeat Password",
+            placeholder = stringResource(id = R.string.repeat_password_placeholder),
             value = state.repeatPassword,
-            onEdit = { SignupEvent.RepeatPasswordChanged(it) },
+            onEdit = { onEvent(SignUpEvent.RepeatPasswordChanged(it)) },
             leadingIcon = Icons.Rounded.Lock,
             isError = state.repeatPasswordError.isNotEmpty(),
             errorMessage = state.repeatPasswordError,
@@ -166,8 +159,15 @@ private fun Content(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp),
-            text = "Log in",
-            onClick = { SignupEvent.Submit },
+            text = stringResource(id = R.string.sign_up_button_label),
+            onClick = {
+                onAuthEvent(
+                    AuthEvent.SignUp(
+                        state.email,
+                        state.password
+                    )
+                )
+            },
             enabled = state.emailError.isEmpty()
                     && state.passwordError.isEmpty()
                     && state.repeatPasswordError.isEmpty()
@@ -186,7 +186,7 @@ private fun Content(
                 modifier = Modifier
                     .weight(1f)
                     .height(50.dp),
-                text = "Sign In with Google",
+                text = stringResource(id = R.string.login_with_google_button_label),
                 onClick = {
 
                 },
@@ -197,7 +197,7 @@ private fun Content(
                 modifier = Modifier
                     .weight(1f)
                     .height(50.dp),
-                text = "Sign In with Github",
+                text = stringResource(id = R.string.login_with_github_button_label),
                 onClick = {
 
                 },

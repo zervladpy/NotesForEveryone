@@ -163,10 +163,12 @@ class DetailTaskViewModel : ViewModel() {
     private fun changeProgression(value: Float) {
 
         Log.wtf("Progression Float", value.toString())
+        Log.wtf("Progression Float", (value == 1f).toString())
         Log.wtf("Progression Int", (value * 100).toInt().toString())
 
         val task = state.value.task.copy(
-            progression = value
+            progression = value,
+            done = value == 1f
         )
 
         _state.value = state.value.copy(

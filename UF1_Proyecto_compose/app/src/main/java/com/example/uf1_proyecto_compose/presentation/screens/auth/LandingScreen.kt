@@ -1,4 +1,4 @@
-package com.example.uf1_proyecto_compose.presentation.screens.landing
+package com.example.uf1_proyecto_compose.presentation.screens.auth
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,35 +11,23 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.uf1_proyecto_compose.R
 import com.example.uf1_proyecto_compose.presentation.common.buttons.N4EButton
 import com.example.uf1_proyecto_compose.presentation.common.buttons.N4EOutlinedButton
 import com.example.uf1_proyecto_compose.presentation.common.buttons.N4ETextButton
 import com.example.uf1_proyecto_compose.presentation.common.texts.AppTitle
-import com.example.uf1_proyecto_compose.presentation.viewmodels.authenitcation.AuthViewModel
 
 
 @Composable
 fun LandingScreen(
     modifier: Modifier = Modifier,
-    viewModel: AuthViewModel,
-    navigateToLogin: () -> Unit = {},
-    navigateToRegister: () -> Unit = {},
-    navigateToHome: () -> Unit = {},
+    navigateToLogin: () -> Unit,
+    navigateToRegister: () -> Unit,
 ) {
-
-    val state = viewModel.state
-
-    // is authentication state is changed navigate to home screen
-    LaunchedEffect(key1 = state.value.isAuthenticated) {
-        if (state.value.isAuthenticated) {
-            navigateToHome()
-        }
-    }
-
     Scaffold(
         content = {
             Content(
@@ -77,7 +65,7 @@ private fun Content(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp),
-            text = "Sign Up",
+            text = stringResource(id = R.string.sign_up_button_label),
             onClick = navigateToRegister
         )
 
@@ -87,7 +75,7 @@ private fun Content(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp),
-            text = "Log in",
+            text = stringResource(id = R.string.login_button_label),
             onClick = navigateToLogin
         )
 
@@ -100,7 +88,7 @@ private fun Content(
                 modifier = Modifier
                     .weight(1f)
                     .height(50.dp),
-                text = "Sign In with Google",
+                text = stringResource(id = R.string.login_with_google_button_label),
                 onClick = {
 
                 },
@@ -111,7 +99,7 @@ private fun Content(
                 modifier = Modifier
                     .weight(1f)
                     .height(50.dp),
-                text = "Sign In with Github",
+                text = stringResource(id = R.string.login_with_github_button_label),
                 onClick = {
 
                 },
@@ -119,5 +107,4 @@ private fun Content(
             )
         }
     }
-
 }
