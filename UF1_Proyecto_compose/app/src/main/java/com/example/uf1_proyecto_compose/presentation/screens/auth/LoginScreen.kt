@@ -1,5 +1,6 @@
 package com.example.uf1_proyecto_compose.presentation.screens.auth
 
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -7,8 +8,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Email
@@ -27,26 +30,32 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.uf1_proyecto_compose.presentation.common.buttons.N4EButton
 import com.example.uf1_proyecto_compose.presentation.common.buttons.N4ETextButton
 import com.example.uf1_proyecto_compose.presentation.common.inputs.N4ETextField
 import com.example.uf1_proyecto_compose.presentation.common.texts.AppTitle
-import com.example.uf1_proyecto_compose.presentation.screens.viewmodels.authentication.AuthViewModel
-import com.example.uf1_proyecto_compose.presentation.screens.viewmodels.authentication.login.LoginEvent
-import com.example.uf1_proyecto_compose.presentation.screens.viewmodels.authentication.login.LoginState
+import com.example.uf1_proyecto_compose.presentation.ui.theme.Notes4EveryoneTheme
+import com.example.uf1_proyecto_compose.presentation.viewmodels.authenitcation.AuthState
+import com.example.uf1_proyecto_compose.presentation.viewmodels.authenitcation.login.LoginEvent
+import com.example.uf1_proyecto_compose.presentation.viewmodels.authenitcation.login.LoginState
 
 @Composable
 fun LoginScreen(
     modifier: Modifier = Modifier,
-    viewModel: AuthViewModel,
+    loginState: LoginState,
+    authState: AuthState,
+    onEvent: (LoginEvent) -> Unit,
     navigateBack: () -> Unit,
     navigateToSignup: () -> Unit,
     navigateToHome: () -> Unit,
 ) {
 
-    LaunchedEffect(key1 = viewModel.state.value.isAuthenticated) {
-        if (viewModel.state.value.isAuthenticated) {
+    val scrollState = rememberScrollState()
+
+    LaunchedEffect(key1 = authState.isAuthenticated) {
+        if (authState.isAuthenticated) {
             navigateToHome()
         }
     }
@@ -55,10 +64,10 @@ fun LoginScreen(
         topBar = { Appbar(navigateBack) },
         content = {
             Content(modifier.padding(it),
-                loginState = viewModel.loginState.value,
-                eventHandler = { event -> viewModel.handleLoginEvent(event) }
+                loginState = loginState,
+                eventHandler = { event -> onEvent(event) }
             )
-        }
+        },
     )
 }
 
@@ -90,7 +99,8 @@ private fun Content(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(20.dp),
+            .padding(20.dp)
+            .imePadding(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -175,7 +185,21 @@ private fun Content(
                 enabled = false
             )
         }
-
     }
+}
 
+@Preview
+@Preview(uiMode = UI_MODE_NIGHT_YES)
+@Composable
+fun LoginScreenPreview() {
+    Notes4EveryoneTheme {
+        LoginScreen(
+            loginState = LoginState(),
+            authState = AuthState(),
+            onEvent = {},
+            navigateBack = {},
+            navigateToSignup = {},
+            navigateToHome = {}
+        )
+    }
 }

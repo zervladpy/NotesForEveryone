@@ -1,5 +1,6 @@
 package com.example.uf1_proyecto_compose.presentation.screens.splash
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,23 +11,27 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.uf1_proyecto_compose.presentation.common.texts.AppTitle
-import com.example.uf1_proyecto_compose.presentation.screens.viewmodels.authentication.AuthViewModel
+import com.example.uf1_proyecto_compose.presentation.viewmodels.authenitcation.AuthState
+import com.example.uf1_proyecto_compose.presentation.viewmodels.shared_tasks.SharedTasksState
 
 @Composable
 fun SplashScreen(
-    authState: AuthViewModel,
+    modifier: Modifier = Modifier,
+    authState: AuthState,
+    sharedTasksState: SharedTasksState,
     navigateHome: () -> Unit,
     navigateToLanding: () -> Unit,
 ) {
 
-    val state = authState.state
+    LaunchedEffect(key1 = authState.isLoading, key2 = sharedTasksState.isLoading) {
 
-    LaunchedEffect(key1 = state.value.isLoading) {
-
-        if (!state.value.isLoading) {
-            if (state.value.isAuthenticated) {
-                navigateHome()
+        if (!authState.isLoading) {
+            if (authState.isAuthenticated) {
+                if (!sharedTasksState.isLoading) {
+                    navigateHome()
+                }
             } else {
+                Log.d("navigating to", "Auth")
                 navigateToLanding()
             }
         }
@@ -36,7 +41,7 @@ fun SplashScreen(
     Scaffold(
         content = {
             Content(
-                modifier = Modifier.padding(it)
+                modifier = modifier.padding(it)
             )
         }
     )

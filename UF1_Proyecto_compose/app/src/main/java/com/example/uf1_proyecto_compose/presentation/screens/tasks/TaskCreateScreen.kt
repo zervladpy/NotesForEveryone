@@ -1,94 +1,87 @@
 package com.example.uf1_proyecto_compose.presentation.screens.tasks
 
-import android.widget.Toast
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.example.uf1_proyecto_compose.domain.model.Subtask
 import com.example.uf1_proyecto_compose.presentation.common.buttons.N4EFabButton
 import com.example.uf1_proyecto_compose.presentation.common.inputs.N4ETextField
-import com.example.uf1_proyecto_compose.presentation.navigation.main.MainNavRoutes
 import com.example.uf1_proyecto_compose.presentation.screens.tasks.component.SubtaskCreatePreview
-import com.example.uf1_proyecto_compose.presentation.screens.tasks.viewmodel.TaskCreateViewModel
-import kotlinx.coroutines.launch
+import com.example.uf1_proyecto_compose.presentation.ui.theme.Notes4EveryoneTheme
+import com.example.uf1_proyecto_compose.presentation.viewmodels.create_task.CreateTaskEvent
+import com.example.uf1_proyecto_compose.presentation.viewmodels.create_task.CreateTaskState
+import com.example.uf1_proyecto_compose.presentation.viewmodels.shared_tasks.SharedTasksEvent
 
 
 @Composable
 fun TaskCreateScreen(
-    navController: NavController,
-    viewModel: TaskCreateViewModel = hiltViewModel(),
+    modifier: Modifier = Modifier,
+    state: CreateTaskState,
+    onCreateTaskViewModelEvent: (CreateTaskEvent) -> Unit,
+    onTasksViewModelAddEvent: (SharedTasksEvent.AddTask) -> Unit,
+    navigateBack: () -> Unit,
+    navigateToNewTask: (String) -> Unit,
 ) {
-
-    val context = LocalContext.current
-    val scope = rememberCoroutineScope()
-
-    fun navigateBack() = navController.popBackStack()
-
-    fun onSuccessNavigate(taskUid: String) {
-        navController.navigate("${MainNavRoutes.TASK_SCREEN}s/${taskUid}")
-    }
-
-    fun onStateChangeMsg(msg: String? = "Unexpected Error") {
-        scope.launch {
-            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
-        }
-    }
 
     Scaffold(
         topBar = {
             Appbar(
-                navigateBack = { navigateBack() }
+                navigateBack = navigateBack
+            )
+        },
+        floatingActionButton = {
+            FabButton(
+                onClick = {
+                    if (state.taskTitleError.isEmpty() && !state.isLoading) {
+                        onTasksViewModelAddEvent(SharedTasksEvent.AddTask(state.task))
+                        navigateToNewTask(state.task.uid)
+                    }
+                }
             )
         },
         content = {
             Content(
-                modifier = Modifier
+                modifier = modifier
                     .padding(it)
-                    .padding(20.dp),
-                viewModel = viewModel
-            )
-        },
-        floatingActionButton = {
-            N4EFabButton(
-                icon = Icons.Rounded.Add,
-                title = "Create Task",
-                onClick = {
-                    viewModel.createTask(
-                        onComplete = { onSuccessNavigate(it) },
-                        onStateChange = { onStateChangeMsg(it) }
-                    )
-                }
+                    .padding(horizontal = 20.dp, vertical = 10.dp),
+                state = state,
+                eventHandler = onCreateTaskViewModelEvent
             )
         }
     )
 
 }
+
+@Composable
+private fun FabButton(
+    onClick: () -> Unit
+) {
+    N4EFabButton(
+        icon = Icons.Rounded.Add,
+        title = "Create Task",
+        onClick = onClick
+    )
+}
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -96,7 +89,7 @@ private fun Appbar(
     navigateBack: () -> Unit,
 ) {
 
-    TopAppBar(
+    CenterAlignedTopAppBar(
         navigationIcon = {
             IconButton(onClick = navigateBack) {
                 Icon(
@@ -117,70 +110,50 @@ private fun Appbar(
 @Composable
 private fun Content(
     modifier: Modifier,
-    viewModel: TaskCreateViewModel,
+    state: CreateTaskState,
+    eventHandler: (CreateTaskEvent) -> Unit,
 ) {
 
-    val state = viewModel.state
-
-    var titleSubtask by remember { mutableStateOf("") }
-
+    val scrollState = rememberScrollState()
 
     Column(
-        modifier = modifier
+        modifier = modifier.verticalScroll(scrollState)
     ) {
 
+        val titleLabel = "Task Title"
+        N4ETextField(
+            label = titleLabel,
+            placeholder = titleLabel,
+            value = state.task.title,
+            onEdit = { eventHandler(CreateTaskEvent.TaskTitleChanged(it)) },
+            isError = state.taskTitleError.isNotEmpty(),
+            errorMessage = state.taskTitleError
+        )
 
-        Column(
-            Modifier.padding(vertical = 10.dp)
-        ) {
+        val descriptionLabel = "Task Description"
+        N4ETextField(
+            label = descriptionLabel,
+            placeholder = descriptionLabel,
+            value = state.task.description,
+            onEdit = { eventHandler(CreateTaskEvent.TaskDescriptionChanged(it)) }
+        )
 
-            val label = "Task Title"
-
-            Text(text = label, style = MaterialTheme.typography.titleSmall)
-            Spacer(modifier = Modifier.height(7.dp))
-            N4ETextField(
-                placeholder = label,
-                value = state.value.title,
-                onEdit = { viewModel.onTitleChange(it) }
-            )
-        }
-
-        Column(
-            Modifier.padding(vertical = 10.dp)
-        ) {
-
-            val label = "Task Description"
-
-            Text(text = label, style = MaterialTheme.typography.titleSmall)
-            Spacer(modifier = Modifier.height(7.dp))
-            N4ETextField(
-                placeholder = label,
-                value = state.value.description,
-                onEdit = { viewModel.onDescriptionChange(it) }
-            )
-        }
-
-        Column(
-            Modifier.padding(vertical = 10.dp)
-        ) {
-            val label = "Subtasks"
-
-            Text(text = label, style = MaterialTheme.typography.titleSmall)
-            Spacer(modifier = Modifier.height(7.dp))
-            N4ETextField(
-                placeholder = "Add Subtask",
-                value = titleSubtask,
-                onEdit = { titleSubtask = it },
-                trailingIcon = Icons.Rounded.Add,
-                trailingAction = { viewModel.addSubtask(titleSubtask) }
-            )
-        }
+        val subtaskLabel = "Subtasks"
+        val subtaskPlaceholder = "Add Subtask"
+        N4ETextField(
+            label = subtaskLabel,
+            placeholder = subtaskPlaceholder,
+            value = state.subtaskTitle,
+            onEdit = { eventHandler(CreateTaskEvent.TaskSubtaskTitleChanged(it)) },
+            trailingIcon = Icons.Rounded.Add,
+            trailingAction = { eventHandler(CreateTaskEvent.TaskSubtaskAdd()) }
+        )
 
         Spacer(modifier = Modifier.height(10.dp))
 
         ShowSubtasks(
-            items = state.value.subtasks,
-            removeItem = { viewModel.removeSubtask(it) }
+            items = state.task.subtasks,
+            removeItem = { eventHandler(CreateTaskEvent.TaskSubtaskRemove(it.uid)) }
         )
 
     }
@@ -201,17 +174,19 @@ fun ShowSubtasks(
     }
 }
 
+@Preview
+@Preview(uiMode = UI_MODE_NIGHT_YES)
 @Composable
-fun ShowSubtasksLazy(
-    items: List<Subtask>,
-    removeItem: (Subtask) -> Unit,
-) {
-    LazyColumn {
-        items(items) {
-            SubtaskCreatePreview(
-                subtask = it,
-                action = { removeItem(it) }
-            )
-        }
+private fun TaskCreateScreenPreview() {
+
+    Notes4EveryoneTheme {
+        TaskCreateScreen(
+            state = CreateTaskState(),
+            navigateBack = {},
+            navigateToNewTask = {},
+            onCreateTaskViewModelEvent = {},
+            onTasksViewModelAddEvent = {}
+        )
     }
+
 }

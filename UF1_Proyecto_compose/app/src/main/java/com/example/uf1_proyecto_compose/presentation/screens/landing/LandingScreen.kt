@@ -19,11 +19,12 @@ import com.example.uf1_proyecto_compose.presentation.common.buttons.N4EButton
 import com.example.uf1_proyecto_compose.presentation.common.buttons.N4EOutlinedButton
 import com.example.uf1_proyecto_compose.presentation.common.buttons.N4ETextButton
 import com.example.uf1_proyecto_compose.presentation.common.texts.AppTitle
-import com.example.uf1_proyecto_compose.presentation.screens.viewmodels.authentication.AuthViewModel
+import com.example.uf1_proyecto_compose.presentation.viewmodels.authenitcation.AuthViewModel
 
 
 @Composable
 fun LandingScreen(
+    modifier: Modifier = Modifier,
     viewModel: AuthViewModel,
     navigateToLogin: () -> Unit = {},
     navigateToRegister: () -> Unit = {},
@@ -42,7 +43,7 @@ fun LandingScreen(
     Scaffold(
         content = {
             Content(
-                modifier = Modifier.padding(it),
+                modifier = modifier.padding(it),
                 navigateToRegister = navigateToRegister,
                 navigateToLogin = navigateToLogin,
             )

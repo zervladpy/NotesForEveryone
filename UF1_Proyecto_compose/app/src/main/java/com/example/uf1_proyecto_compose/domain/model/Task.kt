@@ -26,7 +26,7 @@ fun Task.toDto(): TaskDto {
             .format(FormatterConstraint.dateFormat)
             .toString(),
         synchronized = synchronized,
-        progression = progression.toInt(),
+        progression = (progression * 100).toInt(),
         subtasks = subtasks.map { it.toDto() },
     )
 }
@@ -38,29 +38,8 @@ fun Task.toEntity(userUid: String): TaskEntity {
         description = description,
         creationDate = creationDate.format(FormatterConstraint.dateFormat),
         synced = synchronized,
-        progress = progression.toInt(),
+        progress = (progression * 100).toInt(),
         done = done,
         userUid = userUid
     )
 }
-
-fun Task.copyWith(
-    title: String? = null,
-    description: String? = null,
-    done: Boolean? = null,
-    synchronized: Boolean? = null,
-    progression: Float? = null,
-    subtasks: List<Subtask>? = null
-): Task {
-    return Task(
-        uid = uid,
-        title = title ?: this.title,
-        description = description ?: this.description,
-        done = done ?: this.done,
-        creationDate = creationDate,
-        synchronized = synchronized ?: this.synchronized,
-        progression = progression ?: this.progression,
-        subtasks = subtasks ?: this.subtasks
-    )
-}
-

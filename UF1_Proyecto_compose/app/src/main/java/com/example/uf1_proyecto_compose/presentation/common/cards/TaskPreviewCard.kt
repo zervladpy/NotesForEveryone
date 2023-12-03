@@ -32,7 +32,6 @@ import java.time.format.DateTimeFormatter
 fun TaskPreviewCard(
     task: Task,
     onClick: (Task) -> Unit = {},
-    progress: Float = 0.0f
 ) {
     Card(
         modifier = Modifier
@@ -86,7 +85,7 @@ fun TaskPreviewCard(
                     strokeCap = StrokeCap.Round,
                     color = MaterialTheme.colorScheme.onBackground,
                     trackColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.1f),
-                    progress = { progress }
+                    progress = { task.progression }
                 )
             }
         }

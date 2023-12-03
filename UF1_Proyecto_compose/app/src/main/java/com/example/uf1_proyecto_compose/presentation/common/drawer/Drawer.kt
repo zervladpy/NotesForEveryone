@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.Surface
@@ -23,7 +22,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.uf1_proyecto_compose.presentation.ui.theme.Notes4EveryoneTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Drawer(
     navController: NavController,
@@ -80,7 +78,7 @@ fun TemplatePreview(
             color = MaterialTheme.colorScheme.background
         ) {
             DrawerContent(
-                
+
             )
         }
     }

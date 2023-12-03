@@ -14,7 +14,9 @@ class LoginAnonymously
     private val repository: AuthRepository,
     private val getUser: GetCurrentUserUseCase,
 ) {
-
+    /**
+     *
+     * */
     operator fun invoke(
 
     ): Flow<Response<Unit>> = flow {

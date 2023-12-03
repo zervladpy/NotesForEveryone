@@ -14,6 +14,9 @@ class RegisterWithEmailAndPassword
     private val repository: AuthRepository,
     private val getUser: GetCurrentUserUseCase,
 ) {
+    /**
+     *
+     * */
     operator fun invoke(
         email: String,
         password: String,

@@ -1,6 +1,7 @@
 package com.example.uf1_proyecto_compose.app_navigation
 
 sealed class Routes(val route: String) {
+    object Root : Routes("/")
     object Splash : Routes("splash")
     object Auth : Routes("auth")
     object Landing : Routes("landing")

@@ -1,10 +1,9 @@
 package com.example.uf1_proyecto_compose.domain.use_case.task
 
-import androidx.lifecycle.MutableLiveData
 import com.example.uf1_proyecto_compose.data.repository.TaskRepositoryImpl
 import com.example.uf1_proyecto_compose.domain.model.Task
-import com.example.uf1_proyecto_compose.domain.repository.AuthRepository
 import com.example.uf1_proyecto_compose.domain.repository.TaskRepository
+import com.example.uf1_proyecto_compose.domain.use_case.auth.GetCurrentUserUseCase
 import com.example.uf1_proyecto_compose.utils.Response
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -22,23 +21,23 @@ import javax.inject.Inject
 class GetTasks
 @Inject constructor(
     private val repository: TaskRepository,
-    private val authRepository: AuthRepository,
+    private val getUser: GetCurrentUserUseCase,
 ) {
 
-    val liveTasks: MutableLiveData<List<Task>> by lazy {
-        MutableLiveData<List<Task>>()
-    }
-
     operator fun invoke(
-        userUid: String = "authApi.user!!.uid",
-    ): Flow<Response<MutableLiveData<List<Task>>>> = flow {
+        userUid: String = getUser().uid,
+    ): Flow<Response<List<Task>>> = flow {
         try {
+
+            if (userUid.isEmpty()) {
+                throw Exception("User is Empty")
+            }
 
             emit(Response.Loading())
 
-            repository.get(userUid)
+            val result = repository.get(userUid)
 
-            emit(Response.Success(repository.tasks))
+            emit(Response.Success(result))
 
         } catch (e: HttpException) {
 
@@ -48,6 +47,8 @@ class GetTasks
 
             emit(Response.Error(e.localizedMessage ?: "No internet connection"))
 
+        } catch (e: Exception) {
+            emit(Response.Error(e.localizedMessage ?: e.message!!))
         }
     }
 

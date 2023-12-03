@@ -2,6 +2,8 @@ package com.example.uf1_proyecto_compose.data.repository
 
 import com.example.uf1_proyecto_compose.data.local.dao.AppDao
 import com.example.uf1_proyecto_compose.data.remote.auth.AuthApi
+import com.example.uf1_proyecto_compose.data.remote.dto.toDomain
+import com.example.uf1_proyecto_compose.domain.model.User
 import com.example.uf1_proyecto_compose.domain.repository.AuthRepository
 import javax.inject.Inject
 
@@ -15,8 +17,18 @@ class AuthRepositoryImpl
 ) : AuthRepository {
 
 
+    /**
+     *
+     * */
     override fun isAuthenticated(): Boolean {
         return api.isAuthenticated()
+    }
+
+    /**
+     *
+     * */
+    override fun getCurrentUser(): User {
+        return api.getCurrentUser().toDomain()
     }
 
     /**

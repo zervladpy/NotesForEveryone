@@ -2,8 +2,8 @@ package com.example.uf1_proyecto_compose.domain.use_case.task
 
 import com.example.uf1_proyecto_compose.data.repository.TaskRepositoryImpl
 import com.example.uf1_proyecto_compose.domain.model.Task
-import com.example.uf1_proyecto_compose.domain.repository.AuthRepository
 import com.example.uf1_proyecto_compose.domain.repository.TaskRepository
+import com.example.uf1_proyecto_compose.domain.use_case.auth.GetCurrentUserUseCase
 import com.example.uf1_proyecto_compose.utils.Response
 import com.google.firebase.firestore.FirebaseFirestoreException
 import kotlinx.coroutines.flow.Flow
@@ -23,17 +23,22 @@ import javax.inject.Inject
 class InsertTask
 @Inject constructor(
     private val taskRepository: TaskRepository,
-    private val authRepository: AuthRepository,
+    private val getUser: GetCurrentUserUseCase,
 ) {
 
     operator fun invoke(
-        userUid: String = "authRepository.user!!.uid",
+        userUid: String = getUser().uid,
         task: Task,
     ): Flow<Response<Unit>> = flow {
         try {
+
+            if (userUid.isEmpty()) {
+                throw Exception("User is Empty")
+            }
+
             emit(Response.Loading())
 
-            taskRepository.apiInsert(userUid, task)
+            taskRepository.insert(userUid, task)
 
             emit(Response.Success())
 

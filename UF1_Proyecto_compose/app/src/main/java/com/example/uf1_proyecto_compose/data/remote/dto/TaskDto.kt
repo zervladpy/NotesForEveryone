@@ -13,7 +13,7 @@ data class TaskDto(
     @SerializedName("creation_date") val creationDate: String = "",
     @SerializedName("due_to") val dueTo: String = "",
     @SerializedName("synchronized") val synchronized: Boolean = false,
-    @SerializedName("progression") val progression: Int = if (done) 100 else 0,
+    @SerializedName("progression") val progression: Int = 0,
     @SerializedName("subtasks") val subtasks: List<SubtaskDto> = emptyList(),
 )
 
@@ -29,7 +29,7 @@ fun TaskDto.toDomain(): Task {
             FormatterConstraint.dateFormat
         ),
         synchronized = synchronized,
-        progression = progression.toFloat(),
+        progression = (progression.toFloat() / 100),
         subtasks = subtasks.map { it.toDomain() }
     )
 }

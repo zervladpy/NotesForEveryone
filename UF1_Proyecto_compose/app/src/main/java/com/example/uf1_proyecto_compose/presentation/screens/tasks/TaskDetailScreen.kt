@@ -1,17 +1,16 @@
 package com.example.uf1_proyecto_compose.presentation.screens.tasks
 
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Add
@@ -30,49 +29,39 @@ import androidx.compose.material3.InputChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.example.uf1_proyecto_compose.domain.model.Subtask
 import com.example.uf1_proyecto_compose.presentation.common.buttons.N4EFabButton
 import com.example.uf1_proyecto_compose.presentation.common.inputs.N4ETextField
-import com.example.uf1_proyecto_compose.presentation.screens.tasks.viewmodel.TaskDetailState
-import com.example.uf1_proyecto_compose.presentation.screens.tasks.viewmodel.TaskDetailViewModel
+import com.example.uf1_proyecto_compose.presentation.ui.theme.Notes4EveryoneTheme
+import com.example.uf1_proyecto_compose.presentation.viewmodels.detail_task.DetailTaskEvent
+import com.example.uf1_proyecto_compose.presentation.viewmodels.detail_task.DetailTaskState
+import com.example.uf1_proyecto_compose.presentation.viewmodels.shared_tasks.SharedTasksEvent
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
 import java.time.format.TextStyle
 import java.util.Locale
 
 @Composable
 fun TaskDetailScreen(
-    navController: NavController,
-    viewModel: TaskDetailViewModel = hiltViewModel(),
-    uid: String,
+    modifier: Modifier = Modifier,
+    state: DetailTaskState,
+    onTaskDetailEvent: (DetailTaskEvent) -> Unit,
+    onSharedTasksEvent: (SharedTasksEvent) -> Unit,
+    navigateBack: () -> Unit,
 ) {
 
-    val state = viewModel.state.value
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
-
-    var isEditing by remember { mutableStateOf(false) }
-
-    fun popBack() {
-        navController.navigate("tasks")
-    }
 
     fun notify(message: String) {
         scope.launch {
@@ -82,39 +71,35 @@ fun TaskDetailScreen(
 
     Scaffold(
         topBar = {
-            TopAppbar(
-                popBack = { popBack() }
+            Appbar(
+                popBack = navigateBack
             )
         },
         content = {
             Content(
-                modifier = Modifier.padding(it),
+                modifier = modifier.padding(it),
                 state = state,
-                viewModel = viewModel,
-                isEditing = isEditing
+                onEvent = onTaskDetailEvent,
             )
         },
         bottomBar = {
-            BottomAppbar()
+            BottomAppbar(
+                onDelete = {
+                    onSharedTasksEvent(SharedTasksEvent.RemoveTask(state.task))
+                    navigateBack()
+                }
+            )
         },
         floatingActionButton = {
             FabButton(
-                icon = if (isEditing) {
+                icon = if (state.isEditing) {
                     Icons.Rounded.Done
                 } else Icons.Rounded.Edit,
                 onClick = {
-
-                    isEditing = if (isEditing) {
-                        viewModel.update(
-                            notify = { notify(it) }
-                        )
-
-                        false
-                    } else {
-                        viewModel.reset()
-                        true
+                    if (state.isEditing) {
+                        onSharedTasksEvent(SharedTasksEvent.UpdateTask(state.task))
                     }
-
+                    onTaskDetailEvent(DetailTaskEvent.ToggleEditing(!state.isEditing))
                 }
             )
         },
@@ -124,14 +109,14 @@ fun TaskDetailScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun TopAppbar(
+private fun Appbar(
     popBack: () -> Unit,
 ) {
 
     CenterAlignedTopAppBar(
         navigationIcon = {
             IconButton(
-                onClick = { popBack() }
+                onClick = popBack
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
@@ -151,13 +136,11 @@ private fun TopAppbar(
 
 @Composable
 private fun BottomAppbar(
-
+    onDelete: () -> Unit
 ) {
     BottomAppBar {
         IconButton(
-            onClick = {
-                // delete
-            }
+            onClick = onDelete
         ) {
             Icon(imageVector = Icons.Rounded.Delete, contentDescription = "Delete task")
         }
@@ -180,10 +163,11 @@ private fun FabButton(
 @Composable
 private fun Content(
     modifier: Modifier,
-    viewModel: TaskDetailViewModel,
-    state: TaskDetailState,
-    isEditing: Boolean,
+    state: DetailTaskState,
+    onEvent: (DetailTaskEvent) -> Unit
 ) {
+
+    val scrollState = rememberScrollState()
 
     val labelStyle = MaterialTheme.typography.titleSmall.copy(
         color = MaterialTheme.colorScheme.onBackground.copy(
@@ -191,113 +175,147 @@ private fun Content(
         )
     )
 
-    Surface(
+    Column(
         modifier = modifier
-            .fillMaxSize()
-            .padding(20.dp)
+            .padding(horizontal = 20.dp, vertical = 10.dp)
+            .verticalScroll(
+                state = scrollState
+            )
     ) {
+        Column {
+            val label: String = "Task Title"
+            Text(text = label, style = labelStyle)
+            N4ETextField(
+                value = state.task.title,
+                placeholder = label,
+                onEdit = { onEvent(DetailTaskEvent.TitleTaskChanged(it)) },
+                isEditable = state.isEditing,
+                errorMessage = state.taskTitleError,
+                isError = state.taskTitleError.isNotEmpty()
+            )
+        }
+
+        Spacer(modifier = Modifier.height(15.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            val label: String = "Creation Date"
+            Text(text = label, style = labelStyle)
+            val date = state.task.creationDate
+
+            val dateString = "${date.dayOfMonth}" +
+                    " ${
+                        date.month.getDisplayName(
+                            TextStyle.SHORT,
+                            Locale("es", "es")
+                        )
+                    }" +
+                    " ${date.year}" +
+                    " at ${date.hour}:${date.minute}"
+
+            InputChip(
+
+                selected = false,
+                onClick = {},
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Rounded.DateRange,
+                        contentDescription = ""
+                    )
+                },
+                label = {
+                    Text(text = dateString)
+                }
+            )
+        }
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            val label: String = "Due date"
+            Text(text = label, style = labelStyle)
+            val date = state.task.creationDate
+
+            val dateString = "undefined"
+
+            InputChip(
+                selected = false,
+                onClick = {},
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Rounded.DateRange,
+                        contentDescription = ""
+                    )
+                },
+                label = {
+                    Text(text = dateString)
+                }
+            )
+        }
+
+        Spacer(modifier = Modifier.height(15.dp))
 
         Column {
-            Column {
-                val label: String = "Task Title"
-                Text(text = label, style = labelStyle)
-                N4ETextField(
-                    value = state.task?.title ?: "",
-                    placeholder = label,
-                    onEdit = {
-                        viewModel.setTitle(it)
-                    },
-                    isEditable = isEditing
-                )
-            }
-
-            Spacer(modifier = Modifier.height(15.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                val label: String = "Creation Date"
-                Text(text = label, style = labelStyle)
-                val date = state.task?.creationDate ?: LocalDateTime.now()
-
-                val dateString = "${date.dayOfMonth}" +
-                        " ${
-                            date.month.getDisplayName(
-                                TextStyle.SHORT,
-                                Locale("es", "es")
-                            )
-                        }" +
-                        " ${date.year}" +
-                        " at ${date.hour}:${date.minute}"
-
-                InputChip(
-                    selected = false,
-                    onClick = {},
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Rounded.DateRange,
-                            contentDescription = ""
-                        )
-                    },
-                    label = {
-                        Text(text = dateString)
-                    }
-                )
-            }
-
-            Spacer(modifier = Modifier.height(15.dp))
-
-            Column {
-                val label: String = "Task Description"
-                Text(text = label, style = labelStyle)
-                N4ETextField(
-                    value = state.task?.description ?: "",
-                    placeholder = label,
-                    onEdit = {
-                        viewModel.setDescription(it)
-                    },
-                    isEditable = isEditing,
-                )
-            }
-
-            Spacer(modifier = Modifier.height(15.dp))
-
-            Column {
-                val label: String = "Progress"
-                Text(text = label, style = labelStyle)
-
-                TaskProgressionIndicator(
-                    progression = 0.1f,
-                    onChange = {}
-                )
-
-            }
-
-            Spacer(modifier = Modifier.height(15.dp))
-
-            Column {
-                val label: String = "Subtasks"
-                Text(text = label, style = labelStyle)
-
-                if (isEditing) {
-                    N4ETextField(
-                        placeholder = "Add subtask",
-                        value = "",
-                        onEdit = {},
-                        trailingAction = {},
-                        trailingIcon = Icons.Rounded.Add
-                    )
-                }
-
-                ListSubtasks(subtasks = state.task?.subtasks ?: emptyList())
-
-            }
-
-            Spacer(modifier = Modifier.height(15.dp))
+            val label: String = "Task Description"
+            Text(text = label, style = labelStyle)
+            N4ETextField(
+                value = state.task.description,
+                placeholder = label,
+                onEdit = {
+                    onEvent(DetailTaskEvent.TaskDescriptionChanged(it))
+                },
+                isEditable = state.isEditing
+            )
         }
+
+        Spacer(modifier = Modifier.height(15.dp))
+
+        Column {
+            val label: String = "Progress"
+            Text(text = label, style = labelStyle)
+
+            TaskProgressionIndicator(
+                progression = state.task.progression,
+                onChange = {
+                    onEvent(DetailTaskEvent.TaskProgressionChanged(it))
+                },
+                enabled = state.isEditing
+            )
+        }
+
+        Spacer(modifier = Modifier.height(15.dp))
+
+        Column {
+            val label: String = "Subtasks"
+            Text(text = label, style = labelStyle)
+
+            if (state.isEditing) {
+                N4ETextField(
+                    placeholder = "Add subtask",
+                    value = state.subtaskTitle,
+                    onEdit = {
+                        onEvent(DetailTaskEvent.TaskSubtaskTitleChanged(it))
+                    },
+                    trailingAction = {
+                        onEvent(DetailTaskEvent.AddSubtask())
+                    },
+                    trailingIcon = Icons.Rounded.Add,
+
+                    )
+            }
+
+            ListSubtasks(subtasks = state.task.subtasks)
+
+        }
+
+        Spacer(modifier = Modifier.height(15.dp))
     }
+
 
 }
 
@@ -305,6 +323,7 @@ private fun Content(
 fun TaskProgressionIndicator(
     progression: Float,
     onChange: (p: Float) -> Unit,
+    enabled: Boolean = true
 ) {
 
     Slider(
@@ -312,7 +331,7 @@ fun TaskProgressionIndicator(
         value = progression,
         onValueChangeFinished = {},
         onValueChange = onChange,
-        enabled = false
+        enabled = enabled
     )
 
 }
@@ -322,14 +341,11 @@ fun ListSubtasks(
     subtasks: List<Subtask>,
 ) {
 
-    LazyColumn(
-        contentPadding = PaddingValues(vertical = 10.dp)
+    Column(
     ) {
 
-        items(subtasks, key = { it.uid }) {
-
-            SubtaskDetailCard(subtask = it)
-
+        for (subtask in subtasks) {
+            SubtaskDetailCard(subtask = subtask)
         }
 
     }
@@ -363,5 +379,19 @@ fun SubtaskDetailCard(
             onCheckedChange = {},
         )
 
+    }
+}
+
+@Preview
+@Preview(uiMode = UI_MODE_NIGHT_YES)
+@Composable
+private fun TaskDetailScreenPreview() {
+    Notes4EveryoneTheme {
+        TaskDetailScreen(
+            state = DetailTaskState(),
+            navigateBack = {},
+            onSharedTasksEvent = {},
+            onTaskDetailEvent = {}
+        )
     }
 }
