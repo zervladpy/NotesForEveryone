@@ -14,6 +14,7 @@ class LoginViewModel : ViewModel() {
         when (event) {
             is LoginEvent.EmailChanged -> emailChanged(event.value!!)
             is LoginEvent.PasswordChanged -> passwordChanged(event.value!!)
+            is LoginEvent.SwitchVisibility -> switchVisibility()
         }
     }
 
@@ -37,8 +38,14 @@ class LoginViewModel : ViewModel() {
         )
     }
 
+    private fun switchVisibility() {
+        _state.value = state.value.copy(
+            isPasswordVisible = !state.value.isPasswordVisible
+        )
+    }
+
     private fun checkEmail(
-        value: String
+        value: String,
     ): String {
 
         return if (!value.contains("@")) {
@@ -51,7 +58,7 @@ class LoginViewModel : ViewModel() {
     }
 
     private fun checkPassword(
-        value: String
+        value: String,
     ): String {
 
         return if (value.isEmpty()) {

@@ -1,6 +1,9 @@
 package com.example.uf1_proyecto_compose.presentation.screens.home
 
+import android.app.LocaleConfig
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -20,7 +23,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -40,8 +42,11 @@ import com.example.uf1_proyecto_compose.presentation.ui.theme.Notes4EveryoneThem
 import com.example.uf1_proyecto_compose.presentation.viewmodels.shared_tasks.SharedTasksEvent
 import com.example.uf1_proyecto_compose.presentation.viewmodels.shared_tasks.SharedTasksState
 import java.time.LocalDateTime
+import java.time.format.TextStyle
+import java.util.Locale
 
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
@@ -49,7 +54,7 @@ fun HomeScreen(
     onEvent: (SharedTasksEvent) -> Unit,
     navigateToTask: (String) -> Unit,
     navigateToCreateTask: () -> Unit,
-    logout: () -> Unit
+    logout: () -> Unit,
 ) {
 
     Scaffold(
@@ -75,16 +80,17 @@ fun HomeScreen(
 
 @Composable
 private fun FabButton(
-    navigateToCreateTask: () -> Unit
+    navigateToCreateTask: () -> Unit,
 ) {
     N4EFabButton(icon = Icons.Rounded.Add, onClick = navigateToCreateTask)
 }
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun Appbar(
     isLoading: Boolean = false,
-    logout: () -> Unit = {}
+    logout: () -> Unit = {},
 ) {
     Column {
         TopAppBar(
@@ -103,13 +109,6 @@ private fun Appbar(
             }
         )
 
-        val date = LocalDateTime.now().toLocalDate()
-
-        val month = date.month.toString()
-        val year = date.year
-        val day = date.dayOfMonth
-        val dayOfWeek = date.dayOfWeek
-
         Column(
             modifier = Modifier
                 .padding(
@@ -120,6 +119,17 @@ private fun Appbar(
         ) {
             OutlinedCard {
 
+                val date = LocalDateTime.now()
+
+                val dateString = "${date.dayOfMonth}" +
+                        " ${
+                            date.month.getDisplayName(
+                                TextStyle.SHORT,
+                                Locale(LocaleConfig.TAG_LOCALE, LocaleConfig.TAG_LOCALE)
+                            )
+                        }" +
+                        " ${date.year}"
+
                 Row(
                     modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
                     verticalAlignment = Alignment.CenterVertically
@@ -129,13 +139,7 @@ private fun Appbar(
                         contentDescription = "date"
                     )
                     Spacer(modifier = Modifier.width(15.dp))
-                    Text(text = "$dayOfWeek", style = LocalTextStyle.current)
-                    Spacer(modifier = Modifier.width(15.dp))
-                    Text(text = "$day", style = LocalTextStyle.current)
-                    Spacer(modifier = Modifier.width(15.dp))
-                    Text(text = month, style = LocalTextStyle.current)
-                    Spacer(modifier = Modifier.width(15.dp))
-                    Text(text = "$year", style = LocalTextStyle.current)
+                    Text(text = dateString)
                 }
             }
             Spacer(modifier = Modifier.height(15.dp))
@@ -161,7 +165,7 @@ private fun Appbar(
 private fun Content(
     modifier: Modifier = Modifier,
     navigateToTask: (String) -> Unit,
-    tasks: List<Task> = emptyList()
+    tasks: List<Task> = emptyList(),
 ) {
 
     Column(
@@ -176,13 +180,16 @@ private fun Content(
         LazyColumn {
             items(tasks) {
                 if (!it.done) {
-                    TaskPreviewCard(task = it, onClick = { task -> navigateToTask(task.uid) })
+                    TaskPreviewCard(
+                        modifier = Modifier.padding(bottom = 10.dp),
+                        task = it, onClick = { task -> navigateToTask(task.uid) })
                 }
             }
         }
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Preview
 @Preview(uiMode = UI_MODE_NIGHT_YES)
 @Composable

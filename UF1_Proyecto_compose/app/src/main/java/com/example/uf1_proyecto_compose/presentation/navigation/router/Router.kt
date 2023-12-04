@@ -1,6 +1,10 @@
 package com.example.uf1_proyecto_compose.presentation.navigation.router
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -29,6 +33,7 @@ import com.example.uf1_proyecto_compose.presentation.viewmodels.detail_task.Deta
 import com.example.uf1_proyecto_compose.presentation.viewmodels.profile.ProfileViewModel
 import com.example.uf1_proyecto_compose.presentation.viewmodels.shared_tasks.SharedTasksViewModel
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun Router(
     modifier: Modifier = Modifier
@@ -41,6 +46,30 @@ fun Router(
             .fillMaxSize(),
         navController = navController,
         startDestination = Routes.Root.route,
+        enterTransition = {
+            slideIntoContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                animationSpec = tween(700)
+            )
+        },
+        exitTransition = {
+            slideOutOfContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                animationSpec = tween(700)
+            )
+        },
+        popEnterTransition = {
+            slideIntoContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                animationSpec = tween(700)
+            )
+        },
+        popExitTransition = {
+            slideOutOfContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                animationSpec = tween(700)
+            )
+        }
     ) {
 
         navigation(

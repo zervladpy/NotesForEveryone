@@ -24,10 +24,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -87,7 +83,7 @@ private fun Content(
     modifier: Modifier = Modifier,
     loginState: LoginState = LoginState(),
     onEvent: (LoginEvent) -> Unit,
-    onAuthEvent: (AuthEvent) -> Unit
+    onAuthEvent: (AuthEvent) -> Unit,
 ) {
 
     Column(
@@ -111,8 +107,6 @@ private fun Content(
             errorMessage = loginState.emailError,
         )
 
-        var isPasswordVisible by remember { mutableStateOf(true) }
-
         N4ETextField(
             modifier = Modifier.padding(
                 bottom = 40.dp
@@ -123,12 +117,12 @@ private fun Content(
             leadingIcon = Icons.Rounded.Lock,
             isError = loginState.passwordError.isNotEmpty(),
             errorMessage = loginState.passwordError,
-            isPassword = isPasswordVisible,
-            trailingIcon = if (isPasswordVisible) {
+            isPassword = !loginState.isPasswordVisible,
+            trailingIcon = if (loginState.isPasswordVisible) {
                 Icons.Rounded.VisibilityOff
             } else Icons.Rounded.Visibility,
             trailingAction = {
-                isPasswordVisible = !isPasswordVisible
+                onEvent(LoginEvent.SwitchVisibility())
             }
         )
 

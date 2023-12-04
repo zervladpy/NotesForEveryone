@@ -1,7 +1,10 @@
 package com.example.uf1_proyecto_compose.presentation.screens.tasks
 
+import android.app.LocaleConfig
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.os.Build
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -53,6 +56,7 @@ import kotlinx.coroutines.launch
 import java.time.format.TextStyle
 import java.util.Locale
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun TaskDetailScreen(
     modifier: Modifier = Modifier,
@@ -138,7 +142,7 @@ private fun Appbar(
 
 @Composable
 private fun BottomAppbar(
-    onDelete: () -> Unit
+    onDelete: () -> Unit,
 ) {
     BottomAppBar {
         IconButton(
@@ -165,11 +169,12 @@ private fun FabButton(
 
 }
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 private fun Content(
     modifier: Modifier,
     state: DetailTaskState,
-    onEvent: (DetailTaskEvent) -> Unit
+    onEvent: (DetailTaskEvent) -> Unit,
 ) {
 
     val scrollState = rememberScrollState()
@@ -215,7 +220,7 @@ private fun Content(
                     " ${
                         date.month.getDisplayName(
                             TextStyle.SHORT,
-                            Locale("es", "es")
+                            Locale(LocaleConfig.TAG_LOCALE, LocaleConfig.TAG_LOCALE)
                         )
                     }" +
                     " ${date.year}" +
@@ -334,7 +339,7 @@ private fun Content(
 fun TaskProgressionIndicator(
     progression: Float,
     onChange: (p: Float) -> Unit,
-    enabled: Boolean = true
+    enabled: Boolean = true,
 ) {
 
     Slider(
@@ -351,7 +356,7 @@ fun TaskProgressionIndicator(
 fun ListSubtasks(
     subtasks: List<Subtask>,
     onChange: (uid: String, mark: Boolean) -> Unit,
-    enabled: Boolean
+    enabled: Boolean,
 ) {
 
     Column {
@@ -373,7 +378,7 @@ fun ListSubtasks(
 fun SubtaskDetailCard(
     subtask: Subtask,
     onChange: (Boolean) -> Unit,
-    enabled: Boolean
+    enabled: Boolean,
 ) {
     Row(
         modifier = Modifier
@@ -403,6 +408,7 @@ fun SubtaskDetailCard(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Preview
 @Preview(uiMode = UI_MODE_NIGHT_YES)
 @Composable

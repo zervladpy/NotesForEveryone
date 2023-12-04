@@ -4,4 +4,5 @@ sealed class SignUpEvent(val value: String? = null) {
     class EmailChanged(email: String) : SignUpEvent(email)
     class PasswordChanged(password: String) : SignUpEvent(password)
     class RepeatPasswordChanged(repeatPassword: String) : SignUpEvent(repeatPassword)
+    class SwitchVisibility : SignUpEvent()
 }

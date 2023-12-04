@@ -19,6 +19,8 @@ class SignUpViewModel : ViewModel() {
                 state.value.password
             )
 
+            is SignUpEvent.SwitchVisibility -> switchVisibility()
+
         }
     }
 
@@ -51,8 +53,14 @@ class SignUpViewModel : ViewModel() {
         )
     }
 
+    private fun switchVisibility() {
+        _state.value = state.value.copy(
+            isPasswordVisible = !state.value.isPasswordVisible
+        )
+    }
+
     private fun checkEmail(
-        value: String
+        value: String,
     ): String {
 
         return if (!value.contains("@")) {
@@ -65,7 +73,7 @@ class SignUpViewModel : ViewModel() {
     }
 
     private fun checkPassword(
-        value: String
+        value: String,
     ): String {
 
         return if (value.isEmpty()) {
@@ -77,7 +85,7 @@ class SignUpViewModel : ViewModel() {
 
     private fun checkRepeatPassword(
         value: String,
-        value2: String
+        value2: String,
     ): String {
 
         return if (value.isEmpty()) {

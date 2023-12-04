@@ -9,4 +9,5 @@ data class SignupState(
     val repeatPassword: String = "",
     val repeatPasswordError: String = "",
     val error: String = "",
+    val isPasswordVisible: Boolean = false,
 )

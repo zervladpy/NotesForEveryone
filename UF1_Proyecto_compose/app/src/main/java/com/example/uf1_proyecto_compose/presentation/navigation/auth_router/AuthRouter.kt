@@ -1,5 +1,7 @@
 package com.example.uf1_proyecto_compose.presentation.navigation.auth_router
 
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -18,12 +20,36 @@ import com.example.uf1_proyecto_compose.presentation.viewmodels.authenitcation.s
 fun AuthRouter(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    onAuthEvent: (AuthEvent) -> Unit
+    onAuthEvent: (AuthEvent) -> Unit,
 ) {
 
     NavHost(
         navController = navController,
-        startDestination = AuthRoutes.Landing.route
+        startDestination = AuthRoutes.Landing.route,
+        enterTransition = {
+            slideIntoContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                animationSpec = tween(700)
+            )
+        },
+        exitTransition = {
+            slideOutOfContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                animationSpec = tween(700)
+            )
+        },
+        popEnterTransition = {
+            slideIntoContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                animationSpec = tween(700)
+            )
+        },
+        popExitTransition = {
+            slideOutOfContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                animationSpec = tween(700)
+            )
+        }
     ) {
 
         composable(

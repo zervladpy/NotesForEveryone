@@ -1,5 +1,9 @@
 package com.example.uf1_proyecto_compose.presentation.navigation.bottom_router
 
+import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -13,6 +17,7 @@ import com.example.uf1_proyecto_compose.presentation.viewmodels.profile.ProfileS
 import com.example.uf1_proyecto_compose.presentation.viewmodels.shared_tasks.SharedTasksEvent
 import com.example.uf1_proyecto_compose.presentation.viewmodels.shared_tasks.SharedTasksState
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun BottomRouter(
     modifier: Modifier,
@@ -27,7 +32,31 @@ fun BottomRouter(
 ) {
     NavHost(
         navController = navController,
-        startDestination = BottomRoutes.Home.route
+        startDestination = BottomRoutes.Home.route,
+        enterTransition = {
+            slideIntoContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                animationSpec = tween(700)
+            )
+        },
+        exitTransition = {
+            slideOutOfContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                animationSpec = tween(700)
+            )
+        },
+        popEnterTransition = {
+            slideIntoContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                animationSpec = tween(700)
+            )
+        },
+        popExitTransition = {
+            slideOutOfContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                animationSpec = tween(700)
+            )
+        }
     ) {
 
         composable(
