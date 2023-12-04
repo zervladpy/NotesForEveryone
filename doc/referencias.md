@@ -1,6 +1,6 @@
 # Referencias
 
-## Technologies
+## Tecnologías
 
 >
 > - [Jetpack Compose](https://developer.android.com/jetpack/compose)
@@ -13,7 +13,7 @@
 >
 > - [Room](https://firebase.google.com/) (not implemened yet)
 
-## Design Patterns
+## Patrones de diseño
 
 > - [Clean Architecture](https://www.freecodecamp.org/news/a-quick-introduction-to-clean-architecture-990c014448d2/)
 >
